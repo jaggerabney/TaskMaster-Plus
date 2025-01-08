@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import Header from "@/components/ui/Header";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,6 +19,7 @@ export default function RootLayout({
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header />
         {children}
       </body>
     </html>
