@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "./Button";
 
 export default function Header() {
@@ -9,6 +11,7 @@ export default function Header() {
           text="Login"
           textColor="text-white"
           borderColor="border-white"
+          onClick={() => {}}
         />
       </div>
     </nav>
