@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { ModalContextProvider } from "@/contexts/ModalContext";
-
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,9 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white h-screen w-screen">
-        <ModalContextProvider>{children}</ModalContextProvider>
-      </body>
+      <body className="bg-white h-screen w-screen">{children}</body>
     </html>
   );
 }

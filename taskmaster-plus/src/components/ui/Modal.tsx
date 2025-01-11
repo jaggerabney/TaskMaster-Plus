@@ -1,9 +1,15 @@
-const Modal: React.FC<React.PropsWithChildren> = ({ children }) => {
+export interface ModalProps {
+  children: React.ReactNode;
+  onClose: () => void;
+}
+
+const Modal: React.FC<ModalProps> = ({ children, onClose }: ModalProps) => {
   return (
     <>
       <div
         id="background"
         className="bg-black size-full shadow-2xl fixed z-20 opacity-50"
+        onClick={onClose}
       />
       <div
         id="modal"
