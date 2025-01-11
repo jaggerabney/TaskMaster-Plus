@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import Header from "@/components/ui/Header";
 import { ModalContextProvider } from "@/contexts/ModalContext";
 
 import "./globals.css";
@@ -17,11 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white h-screen w-screen flex flex-col">
-        <ModalContextProvider>
-          <Header />
-          {children}
-        </ModalContextProvider>
+      <body className="bg-white h-screen w-screen">
+        <ModalContextProvider>{children}</ModalContextProvider>
       </body>
     </html>
   );
