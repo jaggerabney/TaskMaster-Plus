@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import { ListProvider } from "@/contexts/ListContext";
 
 export const metadata: Metadata = {
   title: "TaskMaster+",
@@ -14,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white h-screen w-screen">{children}</body>
+      <ListProvider>
+        <body className="bg-white h-screen w-screen">{children}</body>
+      </ListProvider>
     </html>
   );
 }
