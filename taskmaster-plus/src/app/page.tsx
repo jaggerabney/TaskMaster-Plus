@@ -31,14 +31,18 @@ export default function Home() {
         <div className="grow flex flex-row">
           <Sidebar onNewList={modalOpenHandler} />
           <div className="bg-white p-8 flex flex-row gap-8">
-            {listContext.state.lists.map((list) => (
-              <ListItem
-                key={list.id}
-                id={list.id}
-                title={list.title}
-                tasks={[]}
-              />
-            ))}
+            {listContext.state.lists.map(
+              (list) =>
+                list.visible && (
+                  <ListItem
+                    key={list.id}
+                    id={list.id}
+                    title={list.title}
+                    tasks={[]}
+                    visible={true}
+                  />
+                )
+            )}
           </div>
         </div>
       </div>

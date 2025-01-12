@@ -19,7 +19,9 @@ const NewListModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
       type: ListActions.CREATE,
       payload: {
         id: Math.random(),
-        title: inputRef.current?.value || "Untitled list"
+        title: inputRef.current?.value || "Untitled list",
+        visible: true,
+        tasks: []
       }
     });
 

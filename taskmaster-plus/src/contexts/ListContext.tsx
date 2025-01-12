@@ -1,12 +1,14 @@
 "use client";
 
+import { TaskItemType } from "@/components/ui/TaskItem";
 import React, { createContext, useReducer } from "react";
 
 export type List = {
   id: number;
   title: string;
+  visible: boolean;
+  tasks: TaskItemType[];
   // user to come
-  // tasks to come
 };
 
 export type ListContextType = {
@@ -26,6 +28,8 @@ interface ListAction {
   payload: {
     id: number;
     title: string;
+    visible: boolean;
+    tasks: TaskItemType[];
   };
 }
 
@@ -42,8 +46,24 @@ export const listReducer = (
       return {
         lists: [
           ...state.lists,
-          { id: action.payload.id, title: action.payload.title }
+          {
+            id: action.payload.id,
+            title: action.payload.title,
+            visible: action.payload.visible,
+            tasks: action.payload.tasks
+          }
         ]
+      };
+    case "UPDATE":
+      const updatedList = state.lists;
+      const targetListIndex = state.lists.findIndex(
+        (list) => list.id === action.payload.id
+      );
+
+      updatedList[targetListIndex] = action.payload;
+
+      return {
+        lists: updatedList
       };
     default:
       return state;
