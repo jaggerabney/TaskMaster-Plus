@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewList }: SidebarProps) => {
         borderColor="border-redNCS"
         onClick={() => {}}
       />
-      <div className="grow bg-white rounded p-8 flex flex-col gap-4">
+      <div className="grow bg-white rounded p-8 flex flex-col gap-2">
         {listContext.state.lists.map((list) => (
           <div key={list.id} className="flex flex-row gap-4">
             <input
