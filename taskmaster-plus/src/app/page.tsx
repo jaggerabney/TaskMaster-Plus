@@ -5,6 +5,7 @@ import { useState } from "react";
 import Header from "@/components/ui/Header";
 import Sidebar from "@/components/ui/Sidebar";
 import NewListModal from "@/components/ui/modals/NewListModal";
+import ListItem from "@/components/ui/ListItem";
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -27,7 +28,9 @@ export default function Home() {
         <Header />
         <div className="grow flex flex-row">
           <Sidebar onNewList={modalOpenHandler} />
-          <div className="bg-white grow" />
+          <div className="bg-white p-8">
+            <ListItem id={1} title="Bruh!" />
+          </div>
         </div>
       </div>
     </div>
