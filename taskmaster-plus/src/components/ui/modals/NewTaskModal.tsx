@@ -4,7 +4,7 @@ import React, { useContext, useRef } from "react";
 
 import Modal from "../Modal";
 import Button from "../Button";
-import { ListContext } from "@/contexts/ListContext";
+import { ListActions, ListContext } from "@/contexts/ListContext";
 
 export interface ModalProps {
   onClose: () => void;
@@ -12,7 +12,8 @@ export interface ModalProps {
 
 const NewTaskModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
   const listContext = useContext(ListContext);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const listDropdownRef = useRef<HTMLOptionElement>(null);
 
   //   function onNewList() {
   //     listContext.dispatch({
@@ -27,6 +28,34 @@ const NewTaskModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
 
   //     onClose();
   //   }
+
+  function onNewTask() {
+    const listId = Number(listDropdownRef.current?.id);
+    const list = listContext.state.lists.find((list) => list.id === listId);
+    const newTask = {
+      id: Math.random(),
+      listId,
+      title: titleInputRef.current?.value || "Untitled task",
+      completed: false
+    };
+
+    // If no option is selected
+    if (listId === 0 || list === undefined) {
+      // TODO: find out why adding a new task doesn't work!
+    }
+
+    console.log(list);
+
+    listContext.dispatch({
+      type: ListActions.UPDATE,
+      payload: {
+        ...list!,
+        tasks: [...list!.tasks, newTask]
+      }
+    });
+
+    onClose();
+  }
 
   return (
     <Modal onClose={onClose}>
@@ -45,7 +74,12 @@ const NewTaskModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
             className="border border-black rounded text-xl p-2"
           >
             {listContext.state.lists.map((list) => (
-              <option key={list.id} value={list.title}>
+              <option
+                key={list.id}
+                id={list.id.toString()}
+                value={list.title}
+                ref={listDropdownRef}
+              >
                 {list.title}
               </option>
             ))}
@@ -54,7 +88,7 @@ const NewTaskModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
         <input
           className="p-4 border border-black rounded text-2xl"
           type="text"
-          ref={inputRef}
+          ref={titleInputRef}
         />
         <div
           id="button-wrapper"
@@ -72,7 +106,7 @@ const NewTaskModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
             textColor="text-white"
             borderColor="border-redNCS"
             bgColor="bg-redNCS"
-            onClick={() => {}}
+            onClick={onNewTask}
           />
         </div>
       </div>

@@ -6,9 +6,16 @@ export interface ListItemType {
   title: string;
   tasks: TaskItemType[];
   visible: boolean;
+  onClick: () => void;
 }
 
-const ListItem: React.FC<ListItemType> = ({ id, title, tasks, visible }) => {
+const ListItem: React.FC<ListItemType> = ({
+  id,
+  title,
+  tasks,
+  visible,
+  onClick
+}) => {
   return (
     visible && (
       <Card key={id}>
@@ -24,7 +31,10 @@ const ListItem: React.FC<ListItemType> = ({ id, title, tasks, visible }) => {
             />
           ))}
         {tasks.length == 0 && (
-          <div className="self-center underline text-redNCS cursor-pointer">
+          <div
+            className="self-center underline text-redNCS cursor-pointer"
+            onClick={onClick}
+          >
             Create new task
           </div>
         )}

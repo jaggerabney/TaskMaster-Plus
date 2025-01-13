@@ -3,9 +3,8 @@
 import React, { useContext } from "react";
 
 import Button from "./Button";
-import { ListContext } from "@/contexts/ListContext";
+import { List, ListContext } from "@/contexts/ListContext";
 import { ListActions } from "@/contexts/ListContext";
-import { ListItemType } from "./ListItem";
 
 export interface SidebarProps {
   onNewList: () => void;
@@ -22,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     onNewList();
   }
 
-  function listVisibilityToggleHandler(list: ListItemType) {
+  function listVisibilityToggleHandler(list: List) {
     listContext.dispatch({
       type: ListActions.UPDATE,
       payload: {
@@ -49,12 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               name={list.title}
               checked={list.visible}
               onChange={() => {
-                listVisibilityToggleHandler({
-                  id: list.id,
-                  title: list.title,
-                  tasks: list.tasks,
-                  visible: list.visible
-                });
+                listVisibilityToggleHandler(list);
               }}
             />
             <div className={`w-full pr-4 inline-block break-words`}>

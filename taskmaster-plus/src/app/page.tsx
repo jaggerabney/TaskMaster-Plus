@@ -11,7 +11,7 @@ import NewTaskModal from "@/components/ui/modals/NewTaskModal";
 
 export default function Home() {
   const [showNewListModal, setShowNewListModal] = useState(false);
-  const [showNewTaskModal, setShowNewTaskModal] = useState(true);
+  const [showNewTaskModal, setShowNewTaskModal] = useState(false);
   const listContext = useContext(ListContext);
 
   function listModalOpenHandler() {
@@ -52,8 +52,9 @@ export default function Home() {
                     key={list.id}
                     id={list.id}
                     title={list.title}
-                    tasks={[]}
+                    tasks={list.tasks}
                     visible={true}
+                    onClick={taskModalOpenHandler}
                   />
                 )
             )}
