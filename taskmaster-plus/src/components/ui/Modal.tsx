@@ -13,7 +13,7 @@ const Modal: React.FC<ModalProps> = ({ children, onClose }: ModalProps) => {
       />
       <div
         id="modal"
-        className="bg-white rounded-xl inset-0 w-1/4 h-[30%] p-8 fixed m-auto z-30"
+        className="bg-white rounded-xl inset-0 h-fit w-fit p-8 fixed m-auto z-30"
       >
         {children}
       </div>

@@ -30,10 +30,10 @@ const NewListModal: React.FC<ModalProps> = ({ onClose }: ModalProps) => {
 
   return (
     <Modal onClose={onClose}>
-      <div id="wrapper" className="h-full flex flex-col justify-between">
+      <div id="wrapper" className="h-full flex flex-col justify-between gap-8">
         <h1 className="text-4xl select-none font-bold text-night">New List</h1>
         <input
-          className="p-4 border-2 border-black rounded text-2xl"
+          className="p-4 border border-black rounded text-2xl"
           type="text"
           ref={inputRef}
         ></input>

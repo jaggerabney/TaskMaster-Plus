@@ -9,9 +9,13 @@ import { ListItemType } from "./ListItem";
 
 export interface SidebarProps {
   onNewList: () => void;
+  onNewTask: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onNewList }: SidebarProps) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  onNewList,
+  onNewTask
+}: SidebarProps) => {
   const listContext = useContext(ListContext);
 
   function newListHandler() {
@@ -29,12 +33,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewList }: SidebarProps) => {
   }
 
   return (
-    <nav className="bg-cosmicLatte w-1/6 p-8 flex flex-col gap-8 justify-between">
+    <nav className="bg-cosmicLatte w-1/5 p-8 flex flex-col gap-8 justify-between">
       <Button
         text="New task"
         textColor="text-redNCS"
         borderColor="border-redNCS"
-        onClick={() => {}}
+        onClick={onNewTask}
       />
       <div className="grow bg-white rounded p-8 flex flex-col gap-2">
         {listContext.state.lists.map((list) => (
