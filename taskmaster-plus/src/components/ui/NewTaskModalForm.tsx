@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 import Button from "./Button";
 import { ListContext, Task } from "@/contexts/ListContext";
@@ -14,8 +14,17 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
   onSubmit,
   onCancel
 }) => {
+  const [errors, setErrors] = useState<string[]>([]);
   const listContext = useContext(ListContext);
   const listDropdownRef = useRef<HTMLOptionElement>(null);
+
+  function formIsValid() {
+    return errors.length === 0;
+  }
+
+  function formChangeHandler() {
+    setErrors([]);
+  }
 
   function formSubmitHandler(event: React.FormEvent) {
     event.preventDefault();
@@ -25,23 +34,52 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
       datetime: { value: Date };
       description: { value: string };
     };
-    const id = Math.random();
+
+    const taskId = Math.random();
     const listId = Number(listDropdownRef.current?.id);
+    const taskTitle = eventTarget.title.value;
+    let taskDueDate = undefined;
+    let taskDescription = undefined;
 
-    const newTask: Task = {
-      id,
-      listId,
-      title: eventTarget.title.value || "Untitled task",
-      completed: false,
-      dueDate: new Date(eventTarget.datetime.value),
-      description: eventTarget.description.value
-    };
+    // If listId doesn't match any IDs in ListContext
+    if (!listContext.state.lists.map((list) => list.id).includes(listId)) {
+      return setErrors((prevErrors) => [...prevErrors, "Error: invalid list."]);
+    }
 
-    onSubmit(newTask);
+    // If title is empty
+    if (taskTitle.trim().length === 0) {
+      return setErrors((prevErrors) => [
+        ...prevErrors,
+        "Error: title is required."
+      ]);
+    }
+
+    if (eventTarget.datetime.value) {
+      taskDueDate = new Date(eventTarget.datetime.value);
+    }
+
+    if (eventTarget.description.value) {
+      taskDescription = eventTarget.description.value;
+    }
+
+    if (formIsValid()) {
+      onSubmit({
+        id: taskId,
+        listId,
+        title: taskTitle,
+        completed: false,
+        dueDate: taskDueDate,
+        description: taskDescription
+      });
+    }
   }
 
   return (
-    <form onSubmit={formSubmitHandler} className="flex flex-col gap-4">
+    <form
+      onSubmit={formSubmitHandler}
+      onChange={formChangeHandler}
+      className="flex flex-col gap-4"
+    >
       <div
         id="list-dropdown-wrapper"
         className="flex flex-row gap-4 items-center"
@@ -90,6 +128,11 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         placeholder="Task description"
         className="border border-black rounded p-4 resize-none"
       ></textarea>
+      <ul className="flex flex-row justify-center text-redNCS">
+        {errors.map((error) => (
+          <li key={error}>{error}</li>
+        ))}
+      </ul>
       <div id="button-wrapper" className="w-[80%] ml-[20%] flex flex-row gap-4">
         <Button
           text="Cancel"
