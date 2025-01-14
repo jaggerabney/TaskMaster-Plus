@@ -1,10 +1,11 @@
+import { Task } from "@/contexts/ListContext";
 import Card from "./Card";
-import TaskItem, { TaskItemType } from "./TaskItem";
+import TaskItem from "./TaskItem";
 
 export interface ListItemType {
   id: number;
   title: string;
-  tasks: TaskItemType[];
+  tasks: Task[];
   visible: boolean;
   onClick: () => void;
 }
@@ -28,6 +29,8 @@ const ListItem: React.FC<ListItemType> = ({
               listId={task.listId}
               title={task.title}
               completed={task.completed}
+              dueDate={task.dueDate}
+              description={task.description}
             />
           ))}
         {tasks.length == 0 && (

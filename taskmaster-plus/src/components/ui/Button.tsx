@@ -5,7 +5,8 @@ export interface Props {
   textColor: string;
   borderColor: string;
   bgColor?: string;
-  onClick: () => void;
+  onClick?: () => void;
+  type?: "submit" | "reset" | "button" | undefined;
 }
 
 const Button: React.FC<Props> = ({
@@ -13,11 +14,12 @@ const Button: React.FC<Props> = ({
   textColor,
   borderColor,
   bgColor,
-  onClick
+  onClick,
+  type
 }) => {
   return (
     <button
-      type="button"
+      type={type}
       className={`px-4 py-2 w-full ${textColor} ${borderColor} ${bgColor} whitespace-nowrap font-bold border-2 rounded hover:scale-[1.03] duration-100`}
       onClick={onClick}
     >

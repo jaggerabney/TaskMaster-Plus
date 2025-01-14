@@ -1,14 +1,24 @@
 "use client";
 
-import { TaskItemType } from "@/components/ui/TaskItem";
 import React, { createContext, useReducer } from "react";
+import { RRule } from "rrule";
 
 export type List = {
   id: number;
   title: string;
   visible: boolean;
-  tasks: TaskItemType[];
+  tasks: Task[];
   // user to come
+};
+
+export type Task = {
+  id: number;
+  listId: number;
+  title: string;
+  completed: boolean;
+  dueDate?: Date;
+  occurrance?: RRule;
+  description?: string;
 };
 
 export type ListContextType = {
@@ -29,7 +39,7 @@ interface ListAction {
     id: number;
     title: string;
     visible: boolean;
-    tasks: TaskItemType[];
+    tasks: Task[];
   };
 }
 

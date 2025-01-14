@@ -23,7 +23,11 @@ export default function Home() {
   }
 
   function taskModalOpenHandler() {
-    setShowNewTaskModal(true);
+    if (listContext.state.lists.length === 0) {
+      return;
+    } else {
+      setShowNewTaskModal(true);
+    }
   }
 
   function taskModalCloseHandler() {
