@@ -42,23 +42,30 @@ const TaskItem: React.FC<Task> = ({
           {title}
         </div>
       </div>
-      {dueDate && (
-        <div className="text-xs ml-10 flex flex-row gap-2 items-center">
-          <FaCalendar />
-          {dueDate.toLocaleDateString()}
-        </div>
-      )}
-      {dueDate && (
-        <div className="text-xs ml-10 flex flex-row gap-2 items-center">
-          <FaClock />
-          {dueDate.toLocaleTimeString()}
-        </div>
-      )}
-      {description && (
-        <div className="text-xs ml-10 flex flex-row gap-2 items-center">
-          <FaCommentDots />
-          {description}
-        </div>
+      {!isChecked && (
+        <>
+          {dueDate && (
+            <div className="text-xs ml-10 flex flex-row gap-2 items-center">
+              <FaCalendar />
+              {dueDate.toLocaleDateString()}
+            </div>
+          )}
+          {dueDate && (
+            <div className="text-xs ml-10 flex flex-row gap-2 items-center">
+              <FaClock />
+              {dueDate.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+              })}
+            </div>
+          )}
+          {description && (
+            <div className="text-xs ml-10 flex flex-row gap-2 items-center">
+              <FaCommentDots />
+              {description}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

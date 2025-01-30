@@ -31,7 +31,8 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
 
     const eventTarget = event.target as typeof event.target & {
       title: { value: string };
-      datetime: { value: Date };
+      date: { value: Date };
+      time: { value: string };
       description: { value: string };
     };
 
@@ -54,8 +55,27 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
       ]);
     }
 
-    if (eventTarget.datetime.value) {
-      taskDueDate = new Date(eventTarget.datetime.value);
+    // If time is set and date is not
+    if (eventTarget.time.value && !eventTarget.date.value) {
+      return setErrors((prevErrors) => [
+        ...prevErrors,
+        "Error: time cannot be set without date."
+      ]);
+    }
+
+    if (eventTarget.date.value) {
+      taskDueDate = new Date(eventTarget.date.value);
+    }
+
+    if (eventTarget.time.value) {
+      // eventTarget.time.value format: HH:MM
+      // e.g., 20:20 for 8:20pm
+
+      const hoursAndMinutes = eventTarget.time.value.split(":");
+      const hours = Number(hoursAndMinutes[0]);
+      const minutes = Number(hoursAndMinutes[1]);
+
+      taskDueDate?.setHours(hours, minutes);
     }
 
     if (eventTarget.description.value) {
@@ -114,10 +134,15 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         id="datetime-wrapper"
         className="text-xl flex flex-row gap-4 items-center"
       >
-        <label htmlFor="datetime">Due date/time: </label>
+        Due:
         <input
-          id="datetime"
-          type="datetime-local"
+          id="date"
+          type="date"
+          className="border border-black rounded p-2"
+        />
+        <input
+          id="time"
+          type="time"
           className="border border-black rounded p-2"
         />
       </div>
