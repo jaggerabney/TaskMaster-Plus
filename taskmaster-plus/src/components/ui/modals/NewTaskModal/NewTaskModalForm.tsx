@@ -2,9 +2,9 @@
 
 import React, { useContext, useRef, useState } from "react";
 
-import Button from "./Button";
+import Button from "../../Button";
 import { ListContext, Task } from "@/contexts/ListContext";
-import NewTaskRepeatForm from "./NewTaskRepeatForm";
+import NewTaskRepeatForm from "./NewTaskRepeatForm/NewTaskRepeatForm";
 
 export interface NewTaskModalFormType {
   onSubmit: (task: Task) => void;

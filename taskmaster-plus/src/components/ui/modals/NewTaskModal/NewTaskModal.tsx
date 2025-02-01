@@ -2,8 +2,8 @@
 
 import React, { useContext } from "react";
 
-import Modal from "../Modal";
-import NewTaskModalForm from "../NewTaskModalForm";
+import Modal from "../../Modal";
+import NewTaskModalForm from "./NewTaskModalForm";
 import { ListActions, ListContext, Task } from "@/contexts/ListContext";
 
 export interface ModalProps {

@@ -7,7 +7,7 @@ import Sidebar from "@/components/ui/Sidebar";
 import NewListModal from "@/components/ui/modals/NewListModal";
 import ListItem from "@/components/ui/ListItem";
 import { ListContext } from "@/contexts/ListContext";
-import NewTaskModal from "@/components/ui/modals/NewTaskModal";
+import NewTaskModal from "@/components/ui/modals/NewTaskModal/NewTaskModal";
 
 export default function Home() {
   const [showNewListModal, setShowNewListModal] = useState(false);

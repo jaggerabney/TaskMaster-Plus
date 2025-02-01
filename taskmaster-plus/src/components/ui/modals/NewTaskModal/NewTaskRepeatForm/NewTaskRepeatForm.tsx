@@ -1,12 +1,28 @@
 import React, { useState, useRef } from "react";
-import Button from "./Button";
+import WeekdayPicker from "./WeekdayPicker";
+
+interface RepeatFormStateType {
+  freq: string;
+  interval: number;
+  weeklyByDay: string[];
+  monthlyBasis: "BYMONTHDAY" | "BYSETPOS";
+  monthlyByDay: number;
+  monthlyBySetPos: number;
+}
+
+const defaultRepeatFormState: RepeatFormStateType = {
+  freq: "DAILY",
+  interval: 1,
+  weeklyByDay: new Array<string>(),
+  monthlyBasis: "BYMONTHDAY",
+  monthlyByDay: 1,
+  monthlyBySetPos: 1
+};
 
 const NewTaskRepeatForm: React.FC = () => {
-  const [repeatFormState, setRepeatFormState] = useState({
-    freq: "DAILY",
-    interval: 1,
-    byDay: new Array<string>()
-  });
+  const [repeatFormState, setRepeatFormState] = useState(
+    defaultRepeatFormState
+  );
   const freqDropdownRef = useRef<HTMLSelectElement>(null);
   const intervalInputRef = useRef<HTMLInputElement>(null);
 
@@ -18,14 +34,15 @@ const NewTaskRepeatForm: React.FC = () => {
   ]);
 
   function byDayClickHandler(day: string) {
-    const dayIsSelected = repeatFormState.byDay.includes(day.toUpperCase());
+    const dayIsSelected = repeatFormState.weeklyByDay.includes(day);
+    console.log(dayIsSelected);
 
     if (dayIsSelected) {
       return setRepeatFormState((prevState) => {
         return {
           ...prevState,
-          byDay: prevState.byDay.filter(
-            (element) => element !== day.toUpperCase()
+          weeklyByDay: prevState.weeklyByDay.filter(
+            (element) => element !== day
           )
         };
       });
@@ -33,20 +50,37 @@ const NewTaskRepeatForm: React.FC = () => {
       return setRepeatFormState((prevState) => {
         return {
           ...prevState,
-          byDay: prevState.byDay.concat(day.toUpperCase())
+          weeklyByDay: prevState.weeklyByDay.concat(day)
         };
       });
     }
+  }
+
+  function monthlyBasisCheckboxHandler(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const checkboxId = event.target.id;
+    const monthlyBasis =
+      checkboxId === "by-setpos-checkbox" ? "BYSETPOS" : "BYMONTHDAY";
+
+    setRepeatFormState((prevState) => {
+      return {
+        ...prevState,
+        monthlyBasis
+      };
+    });
   }
 
   function repeatFormChangeHandler() {
     const freq = freqDropdownRef.current?.value || "NULL";
     const interval = Number(intervalInputRef.current?.value) || -1;
 
-    setRepeatFormState({
-      freq,
-      interval,
-      byDay: []
+    setRepeatFormState((prevState) => {
+      return {
+        ...prevState,
+        freq,
+        interval
+      };
     });
   }
 
@@ -92,32 +126,20 @@ const NewTaskRepeatForm: React.FC = () => {
         )}
       </div>
       {freqDropdownRef.current?.value === "WEEKLY" && (
-        <ul className="flex flex-row justify-between gap-2 ml-8 mr-8">
-          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-            <Button
-              key={day}
-              text={day}
-              type="button"
-              textColor={
-                repeatFormState.byDay.includes(day.toUpperCase())
-                  ? "text-white"
-                  : "text-redNCS"
-              }
-              borderColor="border-redNCS"
-              bgColor={
-                repeatFormState.byDay.includes(day.toUpperCase())
-                  ? "bg-redNCS"
-                  : "bg-white"
-              }
-              onClick={() => byDayClickHandler(day)}
-            />
-          ))}
-        </ul>
+        <WeekdayPicker
+          selectedDays={repeatFormState.weeklyByDay}
+          onDaySelect={byDayClickHandler}
+        />
       )}
       {freqDropdownRef.current?.value === "MONTHLY" && (
         <ul className="flex flex-col text-xl gap-4">
           <li className="flex flex-row items-center gap-4 ml-8">
-            <input id="by-monthday-checkbox" type="checkbox" />
+            <input
+              id="by-monthday-checkbox"
+              type="checkbox"
+              onChange={monthlyBasisCheckboxHandler}
+              checked={repeatFormState.monthlyBasis === "BYMONTHDAY"}
+            />
             <label htmlFor="by-monthday-checkbox">On day</label>
             <input
               id="by-monthday-input"
@@ -130,17 +152,22 @@ const NewTaskRepeatForm: React.FC = () => {
             />
           </li>
           <li className="flex flex-row items-center gap-4 ml-8">
-            <input id="by-setpos-checkbox" type="checkbox" />
+            <input
+              id="by-setpos-checkbox"
+              type="checkbox"
+              onChange={monthlyBasisCheckboxHandler}
+              checked={repeatFormState.monthlyBasis === "BYSETPOS"}
+            />
             <label htmlFor="by-setpos-checkbox">On the</label>
             <select
               id="by-setpos-dropdown"
               className="border border-black rounded p-2"
             >
-              <option>1st</option>
-              <option>2nd</option>
-              <option>3rd</option>
-              <option>4th</option>
-              <option>Last</option>
+              <option value={1}>1st</option>
+              <option value={2}>2nd</option>
+              <option value={3}>3rd</option>
+              <option value={4}>4th</option>
+              <option value={-1}>Last</option>
             </select>
             <select
               id="by-day-dropdown"
@@ -155,7 +182,9 @@ const NewTaskRepeatForm: React.FC = () => {
                 "Friday",
                 "Saturday"
               ].map((day) => (
-                <option key={day}>{day}</option>
+                <option key={day} value={day.slice(0, 2).toUpperCase()}>
+                  {day}
+                </option>
               ))}
             </select>
           </li>
