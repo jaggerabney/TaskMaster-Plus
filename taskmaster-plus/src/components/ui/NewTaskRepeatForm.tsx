@@ -1,11 +1,12 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Button from "./Button";
 
 const NewTaskRepeatForm: React.FC = () => {
   const [repeatIsChecked, setRepeatIsChecked] = useState(true);
   const [repeatFormState, setRepeatFormState] = useState({
     freq: "DAILY",
-    interval: 1
+    interval: 1,
+    byDay: new Array<string>()
   });
   const freqDropdownRef = useRef<HTMLSelectElement>(null);
   const intervalInputRef = useRef<HTMLInputElement>(null);
@@ -21,13 +22,36 @@ const NewTaskRepeatForm: React.FC = () => {
     setRepeatIsChecked((prevState) => !prevState);
   }
 
+  function byDayClickHandler(day: string) {
+    const dayIsSelected = repeatFormState.byDay.includes(day.toUpperCase());
+
+    if (dayIsSelected) {
+      return setRepeatFormState((prevState) => {
+        return {
+          ...prevState,
+          byDay: prevState.byDay.filter(
+            (element) => element !== day.toUpperCase()
+          )
+        };
+      });
+    } else {
+      return setRepeatFormState((prevState) => {
+        return {
+          ...prevState,
+          byDay: prevState.byDay.concat(day.toUpperCase())
+        };
+      });
+    }
+  }
+
   function repeatFormChangeHandler() {
     const freq = freqDropdownRef.current?.value || "NULL";
     const interval = Number(intervalInputRef.current?.value) || -1;
 
     setRepeatFormState({
       freq,
-      interval
+      interval,
+      byDay: []
     });
   }
 
@@ -84,19 +108,29 @@ const NewTaskRepeatForm: React.FC = () => {
           </>
         )}
       </div>
-      {/* {freqDropdownRef.current?.value === "WEEKLY" && (
-        <ul className="flex flex-row justify-between">
+      {freqDropdownRef.current?.value === "WEEKLY" && (
+        <ul className="flex flex-row justify-between gap-4">
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
             <Button
               key={day}
               text={day}
               type="button"
-              textColor="text-redNCS"
+              textColor={
+                repeatFormState.byDay.includes(day.toUpperCase())
+                  ? "text-white"
+                  : "text-redNCS"
+              }
               borderColor="border-redNCS"
+              bgColor={
+                repeatFormState.byDay.includes(day.toUpperCase())
+                  ? "bg-redNCS"
+                  : "bg-white"
+              }
+              onClick={() => byDayClickHandler(day)}
             />
           ))}
         </ul>
-      )} */}
+      )}
     </>
   );
 };
