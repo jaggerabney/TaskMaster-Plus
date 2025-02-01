@@ -1,6 +1,6 @@
 "use client";
 
-export interface Props {
+export interface ButtonProps {
   text: string;
   textColor: string;
   borderColor: string;
@@ -9,7 +9,7 @@ export interface Props {
   type?: "submit" | "reset" | "button" | undefined;
 }
 
-const Button: React.FC<Props> = ({
+const Button: React.FC<ButtonProps> = ({
   text,
   textColor,
   borderColor,
@@ -20,7 +20,7 @@ const Button: React.FC<Props> = ({
   return (
     <button
       type={type}
-      className={`px-4 py-2 w-full ${textColor} ${borderColor} ${bgColor} whitespace-nowrap font-bold border-2 rounded hover:scale-[1.03] duration-100`}
+      className={`px-4 py-2 w-full ${textColor} ${borderColor} ${bgColor} whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100`}
       onClick={onClick}
     >
       {text}

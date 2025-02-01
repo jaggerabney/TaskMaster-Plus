@@ -4,6 +4,7 @@ import React, { useContext, useRef, useState } from "react";
 
 import Button from "./Button";
 import { ListContext, Task } from "@/contexts/ListContext";
+import NewTaskRepeatForm from "./NewTaskRepeatForm";
 
 export interface NewTaskModalFormType {
   onSubmit: (task: Task) => void;
@@ -152,7 +153,8 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         rows={3}
         placeholder="Task description"
         className="border border-black rounded p-4 resize-none"
-      ></textarea>
+      />
+      <NewTaskRepeatForm />
       <ul className="flex flex-row justify-center text-redNCS">
         {errors.map((error) => (
           <li key={error}>{error}</li>
