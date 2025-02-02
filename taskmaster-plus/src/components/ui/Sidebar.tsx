@@ -33,12 +33,14 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <nav className="bg-cosmicLatte w-1/5 p-8 flex flex-col gap-8 justify-between">
-      <Button
-        text="New task"
-        textColor="text-redNCS"
-        borderColor="border-redNCS"
-        onClick={onNewTask}
-      />
+      {listContext.state.lists.length > 0 && (
+        <Button
+          text="New task"
+          textColor="text-redNCS"
+          borderColor="border-redNCS"
+          onClick={onNewTask}
+        />
+      )}
       <div className="grow bg-white rounded p-8 flex flex-col gap-2">
         {listContext.state.lists.map((list) => (
           <div key={list.id} className="flex flex-row gap-4">

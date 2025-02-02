@@ -16,7 +16,6 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
   onCancel
 }) => {
   const [errors, setErrors] = useState<string[]>([]);
-  const [repeatIsChecked, setRepeatIsChecked] = useState(false);
   const listContext = useContext(ListContext);
   const listDropdownRef = useRef<HTMLOptionElement>(null);
 
@@ -26,10 +25,6 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
 
   function formChangeHandler() {
     setErrors([]);
-  }
-
-  function repeatCheckboxHandler() {
-    setRepeatIsChecked((prevState) => !prevState);
   }
 
   function formSubmitHandler(event: React.FormEvent) {
@@ -159,19 +154,7 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         placeholder="Task description"
         className="border border-black rounded p-4 resize-none"
       />
-      <div
-        id="repeat-checkbox-wrapper"
-        className="text-xl flex flex-row gap-4 items-center"
-      >
-        <input
-          id="repeat-checkbox"
-          type="checkbox"
-          checked={repeatIsChecked}
-          onChange={repeatCheckboxHandler}
-        />
-        <label htmlFor="repeat-checkbox">Repeats</label>
-      </div>
-      {repeatIsChecked && <NewTaskRepeatForm />}
+      <NewTaskRepeatForm />
       <ul className="flex flex-row justify-center text-redNCS">
         {errors.map((error) => (
           <li key={error}>{error}</li>

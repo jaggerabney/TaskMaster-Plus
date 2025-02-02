@@ -3,6 +3,7 @@ import WeekdayPicker from "./WeekdayPicker";
 import MonthlyOptions from "./MonthlyOptions";
 
 interface RepeatFormStateType {
+  isVisible: boolean;
   freq: string;
   interval: number;
   weekly: {
@@ -17,14 +18,17 @@ interface RepeatFormStateType {
 }
 
 const defaultRepeatFormState: RepeatFormStateType = {
+  isVisible: false,
   freq: "DAILY",
   interval: 1,
-  weekly: { byDay: new Array<string>() },
+  weekly: {
+    byDay: new Array<string>()
+  },
   monthly: {
     basis: "BYMONTHDAY",
     byMonthDay: 1,
     bySetPos: 1,
-    byDay: "MO"
+    byDay: "SU"
   }
 };
 
@@ -41,8 +45,6 @@ const NewTaskRepeatForm: React.FC = () => {
     ["MONTHLY", "month"],
     ["YEARLY", "year"]
   ]);
-
-  console.log(repeatFormState.monthly);
 
   function byDayClickHandler(day: string) {
     const dayIsSelected = repeatFormState.weekly.byDay.includes(day);
@@ -66,6 +68,15 @@ const NewTaskRepeatForm: React.FC = () => {
         };
       });
     }
+  }
+
+  function repeatFormVisibilityHandler() {
+    setRepeatFormState((prevState) => {
+      return {
+        ...prevState,
+        isVisible: !prevState.isVisible
+      };
+    });
   }
 
   function repeatFormChangeHandler() {
@@ -103,43 +114,52 @@ const NewTaskRepeatForm: React.FC = () => {
   return (
     <>
       <div
-        id="freq-interval-wrapper"
-        className="flex flex-row gap-4 items-center text-xl"
+        id="repeat-checkbox-wrapper"
+        className="text-xl flex flex-row gap-4 items-center"
       >
-        <label htmlFor="freq">Repeat</label>
-        <select
-          id="freq"
-          name="freq"
-          ref={freqDropdownRef}
-          defaultValue={"DAILY"}
-          onChange={repeatFormChangeHandler}
-          className="border border-black rounded p-2"
-        >
-          <option value="DAILY">daily</option>
-          <option value="WEEKLY">weekly</option>
-          <option value="MONTHLY">monthly</option>
-          <option value="YEARLY">yearly</option>
-        </select>
-        {freqDropdownRef.current?.value !== "YEARLY" && (
-          <>
-            <label htmlFor="interval">every</label>
-            <input
-              type="number"
-              defaultValue={1}
-              step={1}
-              min={1}
-              ref={intervalInputRef}
-              className="border border-black rounded p-2"
-            />
-            <div>
-              {freqDict
-                .get(repeatFormState.freq)
-                ?.concat(
-                  Number(intervalInputRef.current?.value) >= 2 ? "s" : ""
-                )}
-            </div>
-          </>
+        <input
+          id="repeat-checkbox"
+          type="checkbox"
+          checked={repeatFormState.isVisible}
+          onChange={repeatFormVisibilityHandler}
+        />
+        <label htmlFor="repeat-checkbox">Repeat</label>
+        {repeatFormState.isVisible && (
+          <select
+            id="freq"
+            name="freq"
+            ref={freqDropdownRef}
+            defaultValue={"DAILY"}
+            onChange={repeatFormChangeHandler}
+            className="border border-black rounded p-2"
+          >
+            <option value="DAILY">daily</option>
+            <option value="WEEKLY">weekly</option>
+            <option value="MONTHLY">monthly</option>
+            <option value="YEARLY">yearly</option>
+          </select>
         )}
+        {repeatFormState.isVisible &&
+          freqDropdownRef.current?.value !== "YEARLY" && (
+            <>
+              <label htmlFor="interval">every</label>
+              <input
+                type="number"
+                defaultValue={1}
+                step={1}
+                min={1}
+                ref={intervalInputRef}
+                className="border border-black rounded p-2 w-12"
+              />
+              <div>
+                {freqDict
+                  .get(repeatFormState.freq)
+                  ?.concat(
+                    Number(intervalInputRef.current?.value) >= 2 ? "s" : ""
+                  )}
+              </div>
+            </>
+          )}
       </div>
       {freqDropdownRef.current?.value === "WEEKLY" && (
         <WeekdayPicker

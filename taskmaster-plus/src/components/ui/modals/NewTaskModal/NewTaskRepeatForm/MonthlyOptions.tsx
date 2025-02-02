@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 interface MonthlyOptionsPropsType {
   data: {
@@ -19,9 +19,9 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
   data,
   onChange
 }) => {
-  const monthDayInputRef = useRef<HTMLInputElement>(null);
-  const setPosDropdownRef = useRef<HTMLSelectElement>(null);
-  const byDayDropdownRef = useRef<HTMLSelectElement>(null);
+  // const monthDayInputRef = useRef<HTMLInputElement>(null);
+  // const setPosDropdownRef = useRef<HTMLSelectElement>(null);
+  // const byDayDropdownRef = useRef<HTMLSelectElement>(null);
   const { basis, byMonthDay, bySetPos, byDay } = data;
 
   const daysOfTheWeek = [
@@ -41,27 +41,24 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
     ["Last", -1]
   ]);
 
-  function monthlyBasisCheckboxHandler(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const checkboxId = event.target.id;
-    const newMonthlyBasis =
-      checkboxId === "by-setpos-checkbox" ? "BYSETPOS" : "BYMONTHDAY";
-
-    onChange(newMonthlyBasis, byMonthDay, bySetPos, byDay);
-  }
-
   function inputChangeHandler(
     event:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) {
     const targetComponentId = event.target.id;
+    let newBasis: string = basis;
     let newByMonthDay: number = byMonthDay;
     let newBySetPos: number = bySetPos;
     let newByDay: string = byDay;
 
     switch (targetComponentId) {
+      case "by-monthday-checkbox":
+        newBasis = "BYMONTHDAY";
+        break;
+      case "by-setpos-checkbox":
+        newBasis = "BYSETPOS";
+        break;
       case "by-monthday-input":
         newByMonthDay = Number(event.target.value);
         break;
@@ -73,7 +70,7 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
         break;
     }
 
-    onChange(basis, newByMonthDay, newBySetPos, newByDay);
+    onChange(newBasis, newByMonthDay, newBySetPos, newByDay);
   }
 
   return (
@@ -82,13 +79,12 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
         <input
           id="by-monthday-checkbox"
           type="checkbox"
-          onChange={monthlyBasisCheckboxHandler}
+          onChange={inputChangeHandler}
           checked={basis === "BYMONTHDAY"}
         />
         <label htmlFor="by-monthday-checkbox">On day</label>
         <input
           id="by-monthday-input"
-          ref={monthDayInputRef}
           onChange={inputChangeHandler}
           className="border border-black rounded p-2"
           type="number"
@@ -102,13 +98,12 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
         <input
           id="by-setpos-checkbox"
           type="checkbox"
-          onChange={monthlyBasisCheckboxHandler}
+          onChange={inputChangeHandler}
           checked={basis === "BYSETPOS"}
         />
         <label htmlFor="by-setpos-checkbox">On the</label>
         <select
           id="by-setpos-dropdown"
-          ref={setPosDropdownRef}
           value={bySetPos}
           onChange={inputChangeHandler}
           className="border border-black rounded p-2"
@@ -121,7 +116,6 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
         </select>
         <select
           id="by-day-dropdown"
-          ref={byDayDropdownRef}
           value={daysOfTheWeek.find((day) =>
             day.toUpperCase().startsWith(byDay)
           )}
