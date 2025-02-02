@@ -1,21 +1,71 @@
 import React, { useState, useRef } from "react";
 import WeekdayPicker from "./WeekdayPicker";
 import MonthlyOptions from "./MonthlyOptions";
+import YearlyOptions from "./YearlyOptions";
 
-interface RepeatFormStateType {
+export interface WeeklyOptionsType {
+  byDay: string[];
+}
+
+export interface MonthlyOptionsType {
+  basis: string;
+  byMonthDay: number;
+  bySetPos: number;
+  byDay: string;
+}
+
+export interface YearlyOptionsType {
+  basis: string;
+  byMonth: number;
+  byMonthDay: number;
+  bySetPos: number;
+  byDay: string;
+  bySetMonth: number; // same string used in RRule - BYMONTH - but different value is used to prevent crossover
+}
+
+export interface RepeatFormStateType {
   isVisible: boolean;
   freq: string;
   interval: number;
-  weekly: {
-    byDay: string[];
-  };
-  monthly: {
-    basis: string;
-    byMonthDay: number;
-    bySetPos: number;
-    byDay: string;
-  };
+  weekly: WeeklyOptionsType;
+  monthly: MonthlyOptionsType;
+  yearly: YearlyOptionsType;
 }
+
+export const daysOfTheWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
+
+export const setPosDropdownDict = new Map<string, number>([
+  ["1st", 1],
+  ["2nd", 2],
+  ["3rd", 3],
+  ["4th", 4],
+  ["Last", -1]
+]);
+
+export const daysPerMonth = new Map<string, number>([
+  ["January", 31],
+  ["February", 28], // extra day will be added in input max field for leap years
+  ["March", 31],
+  ["April", 30],
+  ["May", 31],
+  ["June", 30],
+  ["July", 31],
+  ["August", 31],
+  ["September", 30],
+  ["October", 31],
+  ["November", 30],
+  ["December", 31]
+]);
+
+export const monthsOfTheYear = Array.from(daysPerMonth.keys());
 
 const defaultRepeatFormState: RepeatFormStateType = {
   isVisible: false,
@@ -29,8 +79,23 @@ const defaultRepeatFormState: RepeatFormStateType = {
     byMonthDay: 1,
     bySetPos: 1,
     byDay: "SU"
+  },
+  yearly: {
+    basis: "BYMONTH",
+    byMonth: 1,
+    byMonthDay: 1,
+    bySetPos: 1,
+    byDay: "SU",
+    bySetMonth: 1 // same string used in RRule - BYMONTH - but different value is used to prevent crossover
   }
 };
+
+const freqDict = new Map<string, string>([
+  ["DAILY", "day"],
+  ["WEEKLY", "week"],
+  ["MONTHLY", "month"],
+  ["YEARLY", "year"]
+]);
 
 const NewTaskRepeatForm: React.FC = () => {
   const [repeatFormState, setRepeatFormState] = useState(
@@ -38,13 +103,6 @@ const NewTaskRepeatForm: React.FC = () => {
   );
   const freqDropdownRef = useRef<HTMLSelectElement>(null);
   const intervalInputRef = useRef<HTMLInputElement>(null);
-
-  const freqDict = new Map<string, string>([
-    ["DAILY", "day"],
-    ["WEEKLY", "week"],
-    ["MONTHLY", "month"],
-    ["YEARLY", "year"]
-  ]);
 
   function byDayClickHandler(day: string) {
     const dayIsSelected = repeatFormState.weekly.byDay.includes(day);
@@ -92,12 +150,9 @@ const NewTaskRepeatForm: React.FC = () => {
     });
   }
 
-  function monthlyOptionsChangeHandler(
-    basis: string,
-    byMonthDay: number,
-    bySetPos: number,
-    byDay: string
-  ) {
+  function monthlyOptionsChangeHandler(data: MonthlyOptionsType) {
+    const { basis, byMonthDay, bySetPos, byDay } = data;
+
     setRepeatFormState((prevState) => {
       return {
         ...prevState,
@@ -106,6 +161,24 @@ const NewTaskRepeatForm: React.FC = () => {
           byMonthDay,
           bySetPos,
           byDay
+        }
+      };
+    });
+  }
+
+  function yearlyOptionsChangeHandler(data: YearlyOptionsType) {
+    const { basis, byMonth, byMonthDay, bySetPos, byDay, bySetMonth } = data;
+
+    setRepeatFormState((prevState) => {
+      return {
+        ...prevState,
+        yearly: {
+          basis,
+          byMonth,
+          byMonthDay,
+          bySetPos,
+          byDay,
+          bySetMonth
         }
       };
     });
@@ -171,6 +244,12 @@ const NewTaskRepeatForm: React.FC = () => {
         <MonthlyOptions
           data={repeatFormState.monthly}
           onChange={monthlyOptionsChangeHandler}
+        />
+      )}
+      {freqDropdownRef.current?.value === "YEARLY" && (
+        <YearlyOptions
+          data={repeatFormState.yearly}
+          onChange={yearlyOptionsChangeHandler}
         />
       )}
     </>
