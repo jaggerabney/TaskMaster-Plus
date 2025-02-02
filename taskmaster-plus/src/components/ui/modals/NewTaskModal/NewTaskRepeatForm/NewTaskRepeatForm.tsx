@@ -1,22 +1,31 @@
 import React, { useState, useRef } from "react";
 import WeekdayPicker from "./WeekdayPicker";
+import MonthlyOptions from "./MonthlyOptions";
 
 interface RepeatFormStateType {
   freq: string;
   interval: number;
-  weeklyByDay: string[];
-  monthlyBasis: "BYMONTHDAY" | "BYSETPOS";
-  monthlyByDay: number;
-  monthlyBySetPos: number;
+  weekly: {
+    byDay: string[];
+  };
+  monthly: {
+    basis: string;
+    byMonthDay: number;
+    bySetPos: number;
+    byDay: string;
+  };
 }
 
 const defaultRepeatFormState: RepeatFormStateType = {
   freq: "DAILY",
   interval: 1,
-  weeklyByDay: new Array<string>(),
-  monthlyBasis: "BYMONTHDAY",
-  monthlyByDay: 1,
-  monthlyBySetPos: 1
+  weekly: { byDay: new Array<string>() },
+  monthly: {
+    basis: "BYMONTHDAY",
+    byMonthDay: 1,
+    bySetPos: 1,
+    byDay: "MO"
+  }
 };
 
 const NewTaskRepeatForm: React.FC = () => {
@@ -33,42 +42,30 @@ const NewTaskRepeatForm: React.FC = () => {
     ["YEARLY", "year"]
   ]);
 
+  console.log(repeatFormState.monthly);
+
   function byDayClickHandler(day: string) {
-    const dayIsSelected = repeatFormState.weeklyByDay.includes(day);
-    console.log(dayIsSelected);
+    const dayIsSelected = repeatFormState.weekly.byDay.includes(day);
 
     if (dayIsSelected) {
       return setRepeatFormState((prevState) => {
         return {
           ...prevState,
-          weeklyByDay: prevState.weeklyByDay.filter(
-            (element) => element !== day
-          )
+          weekly: {
+            byDay: prevState.weekly.byDay.filter((element) => element !== day)
+          }
         };
       });
     } else {
       return setRepeatFormState((prevState) => {
         return {
           ...prevState,
-          weeklyByDay: prevState.weeklyByDay.concat(day)
+          weekly: {
+            byDay: prevState.weekly.byDay.concat(day)
+          }
         };
       });
     }
-  }
-
-  function monthlyBasisCheckboxHandler(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const checkboxId = event.target.id;
-    const monthlyBasis =
-      checkboxId === "by-setpos-checkbox" ? "BYSETPOS" : "BYMONTHDAY";
-
-    setRepeatFormState((prevState) => {
-      return {
-        ...prevState,
-        monthlyBasis
-      };
-    });
   }
 
   function repeatFormChangeHandler() {
@@ -80,6 +77,25 @@ const NewTaskRepeatForm: React.FC = () => {
         ...prevState,
         freq,
         interval
+      };
+    });
+  }
+
+  function monthlyOptionsChangeHandler(
+    basis: string,
+    byMonthDay: number,
+    bySetPos: number,
+    byDay: string
+  ) {
+    setRepeatFormState((prevState) => {
+      return {
+        ...prevState,
+        monthly: {
+          basis,
+          byMonthDay,
+          bySetPos,
+          byDay
+        }
       };
     });
   }
@@ -127,68 +143,15 @@ const NewTaskRepeatForm: React.FC = () => {
       </div>
       {freqDropdownRef.current?.value === "WEEKLY" && (
         <WeekdayPicker
-          selectedDays={repeatFormState.weeklyByDay}
+          selectedDays={repeatFormState.weekly.byDay}
           onDaySelect={byDayClickHandler}
         />
       )}
       {freqDropdownRef.current?.value === "MONTHLY" && (
-        <ul className="flex flex-col text-xl gap-4">
-          <li className="flex flex-row items-center gap-4 ml-8">
-            <input
-              id="by-monthday-checkbox"
-              type="checkbox"
-              onChange={monthlyBasisCheckboxHandler}
-              checked={repeatFormState.monthlyBasis === "BYMONTHDAY"}
-            />
-            <label htmlFor="by-monthday-checkbox">On day</label>
-            <input
-              id="by-monthday-input"
-              className="border border-black rounded p-2"
-              type="number"
-              step={1}
-              defaultValue={1}
-              min={1}
-              max={31}
-            />
-          </li>
-          <li className="flex flex-row items-center gap-4 ml-8">
-            <input
-              id="by-setpos-checkbox"
-              type="checkbox"
-              onChange={monthlyBasisCheckboxHandler}
-              checked={repeatFormState.monthlyBasis === "BYSETPOS"}
-            />
-            <label htmlFor="by-setpos-checkbox">On the</label>
-            <select
-              id="by-setpos-dropdown"
-              className="border border-black rounded p-2"
-            >
-              <option value={1}>1st</option>
-              <option value={2}>2nd</option>
-              <option value={3}>3rd</option>
-              <option value={4}>4th</option>
-              <option value={-1}>Last</option>
-            </select>
-            <select
-              id="by-day-dropdown"
-              className="border border-black rounded p-2"
-            >
-              {[
-                "Sunday",
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday"
-              ].map((day) => (
-                <option key={day} value={day.slice(0, 2).toUpperCase()}>
-                  {day}
-                </option>
-              ))}
-            </select>
-          </li>
-        </ul>
+        <MonthlyOptions
+          data={repeatFormState.monthly}
+          onChange={monthlyOptionsChangeHandler}
+        />
       )}
     </>
   );

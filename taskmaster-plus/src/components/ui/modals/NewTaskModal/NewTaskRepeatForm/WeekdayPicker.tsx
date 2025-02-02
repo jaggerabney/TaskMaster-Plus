@@ -11,8 +11,6 @@ const WeekdayPicker: React.FC<WeekdayPickerType> = ({
 }) => {
   const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  console.log(selectedDays);
-
   return (
     <ul className="flex flex-row justify-between gap-2 ml-8 mr-8">
       {weekdays.map((day) => (
