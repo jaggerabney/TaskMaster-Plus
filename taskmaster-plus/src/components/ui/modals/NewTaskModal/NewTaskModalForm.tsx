@@ -4,7 +4,10 @@ import React, { useContext, useRef, useState } from "react";
 
 import Button from "../../Button";
 import { ListContext, Task } from "@/contexts/ListContext";
-import NewTaskRepeatForm from "./NewTaskRepeatForm/NewTaskRepeatForm";
+import NewTaskRepeatForm, {
+  defaultRepeatFormState
+} from "./NewTaskRepeatForm/NewTaskRepeatForm";
+import { RRule } from "rrule";
 
 export interface NewTaskModalFormType {
   onSubmit: (task: Task) => void;
@@ -16,6 +19,9 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
   onCancel
 }) => {
   const [errors, setErrors] = useState<string[]>([]);
+  const [repeatFormState, setRepeatFormState] = useState(
+    defaultRepeatFormState
+  );
   const listContext = useContext(ListContext);
   const listDropdownRef = useRef<HTMLOptionElement>(null);
 
@@ -84,13 +90,53 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
     }
 
     if (formIsValid()) {
+      let rruleStr = "";
+
+      if (repeatFormState.isVisible) {
+        rruleStr = `FREQ=${repeatFormState.freq};`;
+
+        switch (repeatFormState.freq) {
+          case "WEEKLY":
+            if (repeatFormState.weekly.byDay.length > 0) {
+              rruleStr += `BYDAY=${repeatFormState.weekly.byDay.join(",")};`;
+            }
+
+            break;
+          case "MONTHLY":
+            switch (repeatFormState.monthly.basis) {
+              case "BYMONTHDAY":
+                rruleStr += `BYMONTHDAY=${repeatFormState.monthly.byMonthDay};`;
+                break;
+              case "BYSETPOS":
+                rruleStr += `BYSETPOS=${repeatFormState.monthly.bySetPos};`;
+                rruleStr += `BYDAY=${repeatFormState.monthly.byDay};`;
+                break;
+            }
+          case "YEARLY":
+            switch (repeatFormState.yearly.basis) {
+              case "BYMONTH":
+                rruleStr += `BYMONTH=${repeatFormState.yearly.byMonth};`;
+                rruleStr += `BYMONTHDAY=${repeatFormState.yearly.byMonthDay};`;
+                break;
+              case "BYSETPOS":
+                rruleStr += `BYSETPOS=${repeatFormState.yearly.bySetPos};`;
+                rruleStr += `BYDAY=${repeatFormState.yearly.byDay};`;
+                rruleStr += `BYMONTH=${repeatFormState.yearly.bySetMonth};`;
+            }
+        }
+
+        if (repeatFormState.freq !== "YEARLY")
+          rruleStr += `INTERVAL=${repeatFormState.interval}`;
+      }
+
       onSubmit({
         id: taskId,
         listId,
         title: taskTitle,
         completed: false,
         dueDate: taskDueDate,
-        description: taskDescription
+        description: taskDescription,
+        rrule: rruleStr
       });
     }
   }
@@ -154,7 +200,7 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         placeholder="Task description"
         className="border border-black rounded p-4 resize-none"
       />
-      <NewTaskRepeatForm />
+      <NewTaskRepeatForm data={repeatFormState} onChange={setRepeatFormState} />
       <ul className="flex flex-row justify-center text-redNCS">
         {errors.map((error) => (
           <li key={error}>{error}</li>

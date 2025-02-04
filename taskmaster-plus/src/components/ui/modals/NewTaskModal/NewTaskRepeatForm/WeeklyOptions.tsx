@@ -12,10 +12,11 @@ const WeeklyOptions: React.FC<WeeklyOptionsPropsType> = ({
   onChange
 }) => {
   const { byDay } = data;
+  const weekdays = daysOfTheWeek.map((day) => day.slice(0, 3));
 
   return (
     <ul className="flex flex-row justify-between gap-2 ml-8 mr-8">
-      {daysOfTheWeek.map((day) => (
+      {weekdays.map((day) => (
         <Button
           key={day}
           text={day}

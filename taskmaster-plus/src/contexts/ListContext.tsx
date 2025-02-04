@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useReducer } from "react";
-import { RRule } from "rrule";
 
 export type List = {
   id: number;
@@ -17,8 +16,8 @@ export type Task = {
   title: string;
   completed: boolean;
   dueDate?: Date;
-  occurrance?: RRule;
   description?: string;
+  rrule?: string;
 };
 
 export type ListContextType = {

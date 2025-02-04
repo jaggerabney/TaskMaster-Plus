@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import WeeklyOptions from "./WeeklyOptions";
 import MonthlyOptions from "./MonthlyOptions";
 import YearlyOptions from "./YearlyOptions";
@@ -74,7 +74,7 @@ const freqDict = new Map<string, string>([
   ["YEARLY", "year"]
 ]);
 
-const defaultRepeatFormState: RepeatFormStateType = {
+export const defaultRepeatFormState: RepeatFormStateType = {
   isVisible: false,
   freq: "DAILY",
   interval: 1,
@@ -97,41 +97,39 @@ const defaultRepeatFormState: RepeatFormStateType = {
   }
 };
 
-const NewTaskRepeatForm: React.FC = () => {
-  const [repeatFormState, setRepeatFormState] = useState(
-    defaultRepeatFormState
-  );
+interface NewTaskRepeatFormPropsType {
+  data: RepeatFormStateType;
+  onChange: (data: RepeatFormStateType) => void;
+}
 
+const NewTaskRepeatForm: React.FC<NewTaskRepeatFormPropsType> = ({
+  data,
+  onChange
+}) => {
   function byDayClickHandler(day: string) {
-    const dayIsSelected = repeatFormState.weekly.byDay.includes(day);
+    const dayIsSelected = data.weekly.byDay.includes(day);
 
     if (dayIsSelected) {
-      return setRepeatFormState((prevState) => {
-        return {
-          ...prevState,
-          weekly: {
-            byDay: prevState.weekly.byDay.filter((element) => element !== day)
-          }
-        };
+      return onChange({
+        ...data,
+        weekly: {
+          byDay: data.weekly.byDay.filter((element) => element !== day)
+        }
       });
     } else {
-      return setRepeatFormState((prevState) => {
-        return {
-          ...prevState,
-          weekly: {
-            byDay: prevState.weekly.byDay.concat(day)
-          }
-        };
+      return onChange({
+        ...data,
+        weekly: {
+          byDay: data.weekly.byDay.concat(day)
+        }
       });
     }
   }
 
   function repeatFormVisibilityHandler() {
-    setRepeatFormState((prevState) => {
-      return {
-        ...prevState,
-        isVisible: !prevState.isVisible
-      };
+    onChange({
+      ...data,
+      isVisible: !data.isVisible
     });
   }
 
@@ -142,37 +140,29 @@ const NewTaskRepeatForm: React.FC = () => {
   ) {
     switch (event.target.id) {
       case "freq-dropdown":
-        return setRepeatFormState((prevState) => {
-          return {
-            ...prevState,
-            freq: event.target.value
-          };
+        return onChange({
+          ...data,
+          freq: event.target.value
         });
       case "interval-input":
-        return setRepeatFormState((prevState) => {
-          return {
-            ...prevState,
-            interval: Number(event.target.value)
-          };
+        return onChange({
+          ...data,
+          interval: Number(event.target.value)
         });
     }
   }
 
-  function monthlyOptionsChangeHandler(data: MonthlyOptionsType) {
-    setRepeatFormState((prevState) => {
-      return {
-        ...prevState,
-        monthly: data
-      };
+  function monthlyOptionsChangeHandler(monthData: MonthlyOptionsType) {
+    onChange({
+      ...data,
+      monthly: monthData
     });
   }
 
-  function yearlyOptionsChangeHandler(data: YearlyOptionsType) {
-    setRepeatFormState((prevState) => {
-      return {
-        ...prevState,
-        yearly: data
-      };
+  function yearlyOptionsChangeHandler(yearData: YearlyOptionsType) {
+    onChange({
+      ...data,
+      yearly: yearData
     });
   }
 
@@ -185,15 +175,15 @@ const NewTaskRepeatForm: React.FC = () => {
         <input
           id="repeat-checkbox"
           type="checkbox"
-          checked={repeatFormState.isVisible}
+          checked={data.isVisible}
           onChange={repeatFormVisibilityHandler}
         />
         <label htmlFor="repeat-checkbox">Repeat</label>
-        {repeatFormState.isVisible && (
+        {data.isVisible && (
           <select
             id="freq-dropdown"
             name="freq-dropdown"
-            value={repeatFormState.freq}
+            value={data.freq}
             onChange={freqIntervalChangeHandler}
             className="border border-black rounded p-2"
           >
@@ -203,7 +193,7 @@ const NewTaskRepeatForm: React.FC = () => {
             <option value="YEARLY">yearly</option>
           </select>
         )}
-        {repeatFormState.isVisible && repeatFormState.freq !== "YEARLY" && (
+        {data.isVisible && data.freq !== "YEARLY" && (
           <>
             <label htmlFor="interval-input">every</label>
             <input
@@ -211,33 +201,30 @@ const NewTaskRepeatForm: React.FC = () => {
               type="number"
               step={1}
               min={1}
-              value={repeatFormState.interval}
+              value={data.interval}
               onChange={freqIntervalChangeHandler}
               className="border border-black rounded p-2 w-12"
             />
             <div>
               {freqDict
-                .get(repeatFormState.freq)
-                ?.concat(Number(repeatFormState.interval) >= 2 ? "s" : "")}
+                .get(data.freq)
+                ?.concat(Number(data.interval) >= 2 ? "s" : "")}
             </div>
           </>
         )}
       </div>
-      {repeatFormState.isVisible && repeatFormState.freq === "WEEKLY" && (
-        <WeeklyOptions
-          data={repeatFormState.weekly}
-          onChange={byDayClickHandler}
-        />
+      {data.isVisible && data.freq === "WEEKLY" && (
+        <WeeklyOptions data={data.weekly} onChange={byDayClickHandler} />
       )}
-      {repeatFormState.isVisible && repeatFormState.freq === "MONTHLY" && (
+      {data.isVisible && data.freq === "MONTHLY" && (
         <MonthlyOptions
-          data={repeatFormState.monthly}
+          data={data.monthly}
           onChange={monthlyOptionsChangeHandler}
         />
       )}
-      {repeatFormState.isVisible && repeatFormState.freq === "YEARLY" && (
+      {data.isVisible && data.freq === "YEARLY" && (
         <YearlyOptions
-          data={repeatFormState.yearly}
+          data={data.yearly}
           onChange={yearlyOptionsChangeHandler}
         />
       )}
