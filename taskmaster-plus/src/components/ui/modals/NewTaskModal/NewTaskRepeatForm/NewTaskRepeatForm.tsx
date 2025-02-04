@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import WeekdayPicker from "./WeekdayPicker";
+import React, { useState } from "react";
+import WeeklyOptions from "./WeeklyOptions";
 import MonthlyOptions from "./MonthlyOptions";
 import YearlyOptions from "./YearlyOptions";
 
@@ -20,7 +20,7 @@ export interface YearlyOptionsType {
   byMonthDay: number;
   bySetPos: number;
   byDay: string;
-  bySetMonth: number; // same string used in RRule - BYMONTH - but different value is used to prevent crossover
+  bySetMonth: number; // same string used in RRule - BYMONTH - but different value is used to prevent crossover in form
 }
 
 export interface RepeatFormStateType {
@@ -67,6 +67,13 @@ export const daysPerMonth = new Map<string, number>([
 
 export const monthsOfTheYear = Array.from(daysPerMonth.keys());
 
+const freqDict = new Map<string, string>([
+  ["DAILY", "day"],
+  ["WEEKLY", "week"],
+  ["MONTHLY", "month"],
+  ["YEARLY", "year"]
+]);
+
 const defaultRepeatFormState: RepeatFormStateType = {
   isVisible: false,
   freq: "DAILY",
@@ -86,23 +93,14 @@ const defaultRepeatFormState: RepeatFormStateType = {
     byMonthDay: 1,
     bySetPos: 1,
     byDay: "SU",
-    bySetMonth: 1 // same string used in RRule - BYMONTH - but different value is used to prevent crossover
+    bySetMonth: 1
   }
 };
-
-const freqDict = new Map<string, string>([
-  ["DAILY", "day"],
-  ["WEEKLY", "week"],
-  ["MONTHLY", "month"],
-  ["YEARLY", "year"]
-]);
 
 const NewTaskRepeatForm: React.FC = () => {
   const [repeatFormState, setRepeatFormState] = useState(
     defaultRepeatFormState
   );
-  const freqDropdownRef = useRef<HTMLSelectElement>(null);
-  const intervalInputRef = useRef<HTMLInputElement>(null);
 
   function byDayClickHandler(day: string) {
     const dayIsSelected = repeatFormState.weekly.byDay.includes(day);
@@ -137,49 +135,43 @@ const NewTaskRepeatForm: React.FC = () => {
     });
   }
 
-  function repeatFormChangeHandler() {
-    const freq = freqDropdownRef.current?.value || "NULL";
-    const interval = Number(intervalInputRef.current?.value) || -1;
-
-    setRepeatFormState((prevState) => {
-      return {
-        ...prevState,
-        freq,
-        interval
-      };
-    });
+  function freqIntervalChangeHandler(
+    event:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) {
+    switch (event.target.id) {
+      case "freq-dropdown":
+        return setRepeatFormState((prevState) => {
+          return {
+            ...prevState,
+            freq: event.target.value
+          };
+        });
+      case "interval-input":
+        return setRepeatFormState((prevState) => {
+          return {
+            ...prevState,
+            interval: Number(event.target.value)
+          };
+        });
+    }
   }
 
   function monthlyOptionsChangeHandler(data: MonthlyOptionsType) {
-    const { basis, byMonthDay, bySetPos, byDay } = data;
-
     setRepeatFormState((prevState) => {
       return {
         ...prevState,
-        monthly: {
-          basis,
-          byMonthDay,
-          bySetPos,
-          byDay
-        }
+        monthly: data
       };
     });
   }
 
   function yearlyOptionsChangeHandler(data: YearlyOptionsType) {
-    const { basis, byMonth, byMonthDay, bySetPos, byDay, bySetMonth } = data;
-
     setRepeatFormState((prevState) => {
       return {
         ...prevState,
-        yearly: {
-          basis,
-          byMonth,
-          byMonthDay,
-          bySetPos,
-          byDay,
-          bySetMonth
-        }
+        yearly: data
       };
     });
   }
@@ -199,11 +191,10 @@ const NewTaskRepeatForm: React.FC = () => {
         <label htmlFor="repeat-checkbox">Repeat</label>
         {repeatFormState.isVisible && (
           <select
-            id="freq"
-            name="freq"
-            ref={freqDropdownRef}
-            defaultValue={"DAILY"}
-            onChange={repeatFormChangeHandler}
+            id="freq-dropdown"
+            name="freq-dropdown"
+            value={repeatFormState.freq}
+            onChange={freqIntervalChangeHandler}
             className="border border-black rounded p-2"
           >
             <option value="DAILY">daily</option>
@@ -212,41 +203,39 @@ const NewTaskRepeatForm: React.FC = () => {
             <option value="YEARLY">yearly</option>
           </select>
         )}
-        {repeatFormState.isVisible &&
-          freqDropdownRef.current?.value !== "YEARLY" && (
-            <>
-              <label htmlFor="interval">every</label>
-              <input
-                type="number"
-                defaultValue={1}
-                step={1}
-                min={1}
-                ref={intervalInputRef}
-                className="border border-black rounded p-2 w-12"
-              />
-              <div>
-                {freqDict
-                  .get(repeatFormState.freq)
-                  ?.concat(
-                    Number(intervalInputRef.current?.value) >= 2 ? "s" : ""
-                  )}
-              </div>
-            </>
-          )}
+        {repeatFormState.isVisible && repeatFormState.freq !== "YEARLY" && (
+          <>
+            <label htmlFor="interval-input">every</label>
+            <input
+              id="interval-input"
+              type="number"
+              step={1}
+              min={1}
+              value={repeatFormState.interval}
+              onChange={freqIntervalChangeHandler}
+              className="border border-black rounded p-2 w-12"
+            />
+            <div>
+              {freqDict
+                .get(repeatFormState.freq)
+                ?.concat(Number(repeatFormState.interval) >= 2 ? "s" : "")}
+            </div>
+          </>
+        )}
       </div>
-      {freqDropdownRef.current?.value === "WEEKLY" && (
-        <WeekdayPicker
-          selectedDays={repeatFormState.weekly.byDay}
-          onDaySelect={byDayClickHandler}
+      {repeatFormState.isVisible && repeatFormState.freq === "WEEKLY" && (
+        <WeeklyOptions
+          data={repeatFormState.weekly}
+          onChange={byDayClickHandler}
         />
       )}
-      {freqDropdownRef.current?.value === "MONTHLY" && (
+      {repeatFormState.isVisible && repeatFormState.freq === "MONTHLY" && (
         <MonthlyOptions
           data={repeatFormState.monthly}
           onChange={monthlyOptionsChangeHandler}
         />
       )}
-      {freqDropdownRef.current?.value === "YEARLY" && (
+      {repeatFormState.isVisible && repeatFormState.freq === "YEARLY" && (
         <YearlyOptions
           data={repeatFormState.yearly}
           onChange={yearlyOptionsChangeHandler}
