@@ -128,3 +128,54 @@ export const defaultRepeatFormState: RepeatFormStateType = {
     until: getTomorrowsDate() // tomorrow
   }
 };
+
+export function buildRRuleStr(data: RepeatFormStateType): string {
+  const { isVisible, freq, interval, weekly, monthly, yearly, until } = data;
+  const rrules: string[] = [];
+
+  if (isVisible) {
+    rrules.push(`FREQ=${freq}`);
+
+    switch (freq) {
+      case "WEEKLY":
+        if (weekly.byDay.length > 0) {
+          rrules.push(`BYDAY=${weekly.byDay.join(",")}`);
+        }
+
+        break;
+      case "MONTHLY":
+        switch (monthly.basis) {
+          case "BYMONTHDAY":
+            rrules.push(`BYMONTHDAY=${monthly.byMonthDay}`);
+            break;
+          case "BYSETPOS":
+            rrules.push(`BYSETPOS=${monthly.bySetPos}`);
+            rrules.push(`BYDAY=${monthly.byDay}`);
+            break;
+        }
+      case "YEARLY":
+        switch (yearly.basis) {
+          case "BYMONTH":
+            rrules.push(`BYMONTH=${yearly.byMonth}`);
+            rrules.push(`BYMONTHDAY=${yearly.byMonthDay}`);
+            break;
+          case "BYSETPOS":
+            rrules.push(`BYSETPOS=${yearly.bySetPos}`);
+            rrules.push(`BYDAY=${yearly.byDay}`);
+            rrules.push(`BYMONTH=${yearly.bySetMonth}`);
+        }
+    }
+
+    if (freq !== "YEARLY") rrules.push(`INTERVAL=${interval}`);
+
+    switch (until.basis) {
+      case "COUNT":
+        rrules.push(`COUNT=${until.count}`);
+        break;
+      case "UNTIL":
+        rrules.push(`UNTIL=${toUntilDateString(until.until)}`);
+    }
+  }
+
+  return rrules.join(";");
+}

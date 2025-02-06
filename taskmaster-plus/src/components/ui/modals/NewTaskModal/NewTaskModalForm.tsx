@@ -5,7 +5,7 @@ import React, { useContext, useRef, useState } from "react";
 import Button from "../../Button";
 import NewTaskRepeatForm from "./NewTaskRepeatForm/NewTaskRepeatForm";
 import { ListContext, Task } from "@/contexts/ListContext";
-import { defaultRepeatFormState } from "@/utils/Util";
+import { buildRRuleStr, defaultRepeatFormState } from "@/utils/Util";
 
 export interface NewTaskModalFormType {
   onSubmit: (task: Task) => void;
@@ -88,44 +88,9 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
     }
 
     if (formIsValid()) {
-      let rruleStr = "";
+      const rruleStr: string = buildRRuleStr(repeatFormState);
 
-      if (repeatFormState.isVisible) {
-        rruleStr = `FREQ=${repeatFormState.freq};`;
-
-        switch (repeatFormState.freq) {
-          case "WEEKLY":
-            if (repeatFormState.weekly.byDay.length > 0) {
-              rruleStr += `BYDAY=${repeatFormState.weekly.byDay.join(",")};`;
-            }
-
-            break;
-          case "MONTHLY":
-            switch (repeatFormState.monthly.basis) {
-              case "BYMONTHDAY":
-                rruleStr += `BYMONTHDAY=${repeatFormState.monthly.byMonthDay};`;
-                break;
-              case "BYSETPOS":
-                rruleStr += `BYSETPOS=${repeatFormState.monthly.bySetPos};`;
-                rruleStr += `BYDAY=${repeatFormState.monthly.byDay};`;
-                break;
-            }
-          case "YEARLY":
-            switch (repeatFormState.yearly.basis) {
-              case "BYMONTH":
-                rruleStr += `BYMONTH=${repeatFormState.yearly.byMonth};`;
-                rruleStr += `BYMONTHDAY=${repeatFormState.yearly.byMonthDay};`;
-                break;
-              case "BYSETPOS":
-                rruleStr += `BYSETPOS=${repeatFormState.yearly.bySetPos};`;
-                rruleStr += `BYDAY=${repeatFormState.yearly.byDay};`;
-                rruleStr += `BYMONTH=${repeatFormState.yearly.bySetMonth};`;
-            }
-        }
-
-        if (repeatFormState.freq !== "YEARLY")
-          rruleStr += `INTERVAL=${repeatFormState.interval}`;
-      }
+      console.log(rruleStr);
 
       onSubmit({
         id: taskId,
@@ -138,8 +103,6 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
       });
     }
   }
-
-  console.log(repeatFormState);
 
   return (
     <form
