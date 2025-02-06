@@ -4,7 +4,7 @@ import {
   MonthlyOptionsType,
   daysOfTheWeek,
   setPosDropdownDict
-} from "./NewTaskRepeatForm";
+} from "@/utils/Util";
 
 interface MonthlyOptionsPropsType {
   data: MonthlyOptionsType;

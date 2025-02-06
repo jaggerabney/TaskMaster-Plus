@@ -3,11 +3,9 @@
 import React, { useContext, useRef, useState } from "react";
 
 import Button from "../../Button";
+import NewTaskRepeatForm from "./NewTaskRepeatForm/NewTaskRepeatForm";
 import { ListContext, Task } from "@/contexts/ListContext";
-import NewTaskRepeatForm, {
-  defaultRepeatFormState
-} from "./NewTaskRepeatForm/NewTaskRepeatForm";
-import { RRule } from "rrule";
+import { defaultRepeatFormState } from "@/utils/Util";
 
 export interface NewTaskModalFormType {
   onSubmit: (task: Task) => void;
@@ -141,6 +139,8 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
     }
   }
 
+  console.log(repeatFormState);
+
   return (
     <form
       onSubmit={formSubmitHandler}
@@ -201,6 +201,7 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         className="border border-black rounded p-4 resize-none"
       />
       <NewTaskRepeatForm data={repeatFormState} onChange={setRepeatFormState} />
+
       <ul className="flex flex-row justify-center text-redNCS">
         {errors.map((error) => (
           <li key={error}>{error}</li>

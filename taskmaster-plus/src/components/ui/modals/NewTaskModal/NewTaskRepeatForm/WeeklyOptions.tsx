@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
-import { WeeklyOptionsType } from "./NewTaskRepeatForm";
-import { daysOfTheWeek } from "./NewTaskRepeatForm";
+
+import { WeeklyOptionsType, daysOfTheWeek } from "@/utils/Util";
 
 interface WeeklyOptionsPropsType {
   data: WeeklyOptionsType;
