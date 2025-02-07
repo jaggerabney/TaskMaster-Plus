@@ -1,7 +1,13 @@
 export function toUntilDateString(date: Date): string {
-  return date
-    .toISOString() // ...to ISO string - e.g., 2023-12-24T18:30:00Z...
-    .replace(/-:\./g, ""); // ...without the dashes, colons, or periods
+  date.setUTCHours(0, 0, 0, 0); // normalize time
+
+  const dateISOString = date.toISOString();
+
+  // TODO: fix issue where ISO milliseconds(?) causing test failures
+
+  return dateISOString // ...to ISO string - e.g., 2023-12-24T18:30:00Z...
+    .replace(/\..../g, "") // remove ms portion
+    .replace(/[-:]/g, ""); // ...without the dashes, colons, or periods
 }
 
 export function getTomorrowsDate(): Date {
@@ -101,6 +107,8 @@ export const freqDict = new Map<string, string>([
   ["YEARLY", "year"]
 ]);
 
+export const freqs = Array.from(freqDict.keys());
+
 export const defaultRepeatFormState: RepeatFormStateType = {
   isVisible: false,
   freq: "DAILY",
@@ -134,6 +142,10 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
   const rrules: string[] = [];
 
   if (isVisible) {
+    if (!freqs.includes(freq)) {
+      return "ERROR";
+    }
+
     rrules.push(`FREQ=${freq}`);
 
     switch (freq) {
@@ -166,13 +178,30 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
         }
     }
 
-    if (freq !== "YEARLY") rrules.push(`INTERVAL=${interval}`);
+    if (freq !== "YEARLY") {
+      if (interval > 0) {
+        rrules.push(`INTERVAL=${interval}`);
+      } else {
+        return "ERROR";
+      }
+    }
 
     switch (until.basis) {
       case "COUNT":
+        if (until.count <= 0) {
+          return "ERROR";
+        }
+
         rrules.push(`COUNT=${until.count}`);
+
         break;
       case "UNTIL":
+        const now = new Date();
+
+        if (until.until.getTime() < now.getTime()) {
+          return "ERROR";
+        }
+
         rrules.push(`UNTIL=${toUntilDateString(until.until)}`);
     }
   }
