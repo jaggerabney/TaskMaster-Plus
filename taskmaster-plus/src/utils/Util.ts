@@ -138,7 +138,10 @@ export const defaultRepeatFormState: RepeatFormStateType = {
 };
 
 export function buildRRuleStr(data: RepeatFormStateType): string {
+  // values are extracted from data to make things less messy
   const { isVisible, freq, interval, weekly, monthly, yearly, until } = data;
+  // rrules are added to a string[] one-at-a-time; this is because the Array.join method is used
+  // at the end of this function to create the overall rule and separate subrules with semicolons
   const rrules: string[] = [];
 
   if (isVisible) {
@@ -147,21 +150,31 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
       return "ERROR";
     }
 
-    // if the freq is valid, add it to the rrules array
+    // if the freq is valid, add it to the rrules array.
+    // this is done first because freq is one of the only required rrules
     rrules.push(`FREQ=${freq}`);
 
+    // extra information is added via this switch state, depending on the freq.
+    // daily is not included because it has no other information
     switch (freq) {
       case "WEEKLY":
-        // only add BYDAY rule if there are days passed; otherwise, skip it
+        // only add BYDAY rule if byDays has values; otherwise, skip it
         if (weekly.byDay.length > 0) {
           rrules.push(`BYDAY=${weekly.byDay.join(",")}`);
         }
 
         break;
       case "MONTHLY":
+        // there are two types of monthly rrules:
+        // 1. those that repeat on a specific day of the month - e.g., the 15th
+        // 2. those that repeat on a set "position" - e.g,. the third Thursday of the month
+        // the monthly "basis" stores which of these is being used - BYMONTHDAY and BYSETPOS, respectively.
+        // (this is also the case for YEARLY as well!)
         switch (monthly.basis) {
           case "BYMONTHDAY":
-            // if byMonthDay is 0 or negative, return ERROR
+            // if byMonthDay is 0 or negative,
+            // or if byMonthDay is over 31, a value which no month has more days than,
+            // return ERROR
             if (monthly.byMonthDay <= 0 || monthly.byMonthDay > 31) {
               return "ERROR";
             }
@@ -179,6 +192,7 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
 
             // if bySetPos is not a valid value
             // OR if byDay is not a valid value
+            // return ERROR
             if (
               !validSetPosValues.includes(monthly.bySetPos) ||
               !validByDayValues.includes(monthly.byDay)
@@ -227,7 +241,8 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
 
             // if bySetPos is not valid,
             // or byDay is not valid,
-            // or bySetMonth is not beteween 1-12
+            // or bySetMonth is not beteween 1-12,
+            // return ERROR
             if (
               !validSetPosValues.includes(yearly.bySetPos) ||
               !validByDayValues.includes(yearly.byDay) ||
