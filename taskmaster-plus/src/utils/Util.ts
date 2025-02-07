@@ -142,14 +142,17 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
   const rrules: string[] = [];
 
   if (isVisible) {
+    // if the passed freq is not DAILY, WEEKLY, MONTHLY, or YEARLY, return ERROR
     if (!freqs.includes(freq)) {
       return "ERROR";
     }
 
+    // if the freq is valid, add it to the rrules array
     rrules.push(`FREQ=${freq}`);
 
     switch (freq) {
       case "WEEKLY":
+        // only add BYDAY rule if there are days passed; otherwise, skip it
         if (weekly.byDay.length > 0) {
           rrules.push(`BYDAY=${weekly.byDay.join(",")}`);
         }
@@ -158,13 +161,37 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
       case "MONTHLY":
         switch (monthly.basis) {
           case "BYMONTHDAY":
+            // if byMonthDay is 0 or negative, return ERROR
+            if (monthly.byMonthDay <= 0) {
+              return "ERROR";
+            }
+
             rrules.push(`BYMONTHDAY=${monthly.byMonthDay}`);
+
             break;
           case "BYSETPOS":
+            // values associated with set positions - [1, 2, 3, 4, -1]
+            const validSetPosValues = Array.from(setPosDropdownDict.values());
+            // valid values for byMonth - [SU, MO, TU, WE, TH, FR, SA, SU]
+            const validByMonthValues = daysOfTheWeek.map((day) =>
+              day.slice(0, 2).toUpperCase()
+            );
+
+            // if bySetPos is not a valid value
+            // OR if byDay is not a valid value
+            if (
+              !validSetPosValues.includes(monthly.bySetPos) ||
+              !validByMonthValues.includes(monthly.byDay)
+            ) {
+              return "ERROR";
+            }
+
             rrules.push(`BYSETPOS=${monthly.bySetPos}`);
             rrules.push(`BYDAY=${monthly.byDay}`);
             break;
         }
+
+        break;
       case "YEARLY":
         switch (yearly.basis) {
           case "BYMONTH":
@@ -175,15 +202,18 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
             rrules.push(`BYSETPOS=${yearly.bySetPos}`);
             rrules.push(`BYDAY=${yearly.byDay}`);
             rrules.push(`BYMONTH=${yearly.bySetMonth}`);
+            break;
         }
+
+        break;
     }
 
     if (freq !== "YEARLY") {
-      if (interval > 0) {
-        rrules.push(`INTERVAL=${interval}`);
-      } else {
+      if (interval <= 0) {
         return "ERROR";
       }
+
+      rrules.push(`INTERVAL=${interval}`);
     }
 
     switch (until.basis) {
@@ -203,6 +233,8 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
         }
 
         rrules.push(`UNTIL=${toUntilDateString(until.until)}`);
+
+        break;
     }
   }
 

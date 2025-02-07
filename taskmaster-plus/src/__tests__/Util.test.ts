@@ -34,6 +34,36 @@ interface WeeklyUntilTestType {
   until: Date;
 }
 
+interface MonthlyCountAfterTestType {
+  freq: string;
+  interval: number;
+  byMonthDay: number;
+  count: number;
+}
+
+interface MonthlyCountUntilTestType {
+  freq: string;
+  interval: number;
+  byMonthDay: number;
+  until: Date;
+}
+
+interface MonthlyDateAfterTestType {
+  freq: string;
+  interval: number;
+  bySetPos: number;
+  byDay: string;
+  count: number;
+}
+
+interface MonthlyDateUntilTestType {
+  freq: string;
+  interval: number;
+  bySetPos: number;
+  byDay: string;
+  until: Date;
+}
+
 const dailyAfterTestData: Map<DailyAfterTestType, string> = new Map([
   [{ interval: 1, count: 30 }, "FREQ=DAILY;INTERVAL=1;COUNT=30"], // valid input
   [{ interval: -1, count: 1 }, "ERROR"], // negative interval
@@ -152,6 +182,234 @@ const weeklyUntilTestData: Map<WeeklyUntilTestType, string> = new Map([
   ] // empty freq, should return ERROR
 ]);
 
+const monthlyCountAfterTestData: Map<MonthlyCountAfterTestType, string> =
+  new Map([
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        byMonthDay: 15,
+        count: 12
+      },
+      "FREQ=MONTHLY;BYMONTHDAY=15;INTERVAL=1;COUNT=12"
+    ], // valid input
+    [
+      {
+        freq: "",
+        interval: 1,
+        byMonthDay: 12,
+        count: 4
+      },
+      "ERROR"
+    ], // empty freq, should return error
+    [
+      {
+        freq: "MONTHLY",
+        interval: -3,
+        byMonthDay: 4,
+        count: 1
+      },
+      "ERROR"
+    ], // negative interval, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        byMonthDay: -10,
+        count: 2
+      },
+      "ERROR"
+    ], // negative byMonthDay, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        byMonthDay: 1,
+        count: -1
+      },
+      "ERROR"
+    ] // negative count, should return ERROR
+  ]);
+
+const monthlyCountUntilTestData: Map<MonthlyCountUntilTestType, string> =
+  new Map([
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        byMonthDay: 15,
+        until: new Date(2030, 0, 1)
+      },
+      "FREQ=MONTHLY;BYMONTHDAY=15;INTERVAL=1;UNTIL=20300101T000000Z"
+    ], // valid input
+    [
+      {
+        freq: "",
+        interval: 2,
+        byMonthDay: 9,
+        until: new Date(2028, 4, 3)
+      },
+      "ERROR"
+    ], // empty freq, should return error
+    [
+      {
+        freq: "MONTHLY",
+        interval: -8,
+        byMonthDay: 2,
+        until: new Date(2026, 3, 12)
+      },
+      "ERROR"
+    ], // negative interval, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        byMonthDay: -2,
+        until: new Date(2029, 10, 23)
+      },
+      "ERROR"
+    ], // negative byMonthDay, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        byMonthDay: 1,
+        until: new Date(1995, 9, 31)
+      },
+      "ERROR"
+    ] // until date in past, should return ERROR
+  ]);
+
+const monthlyDateAfterTestData: Map<MonthlyDateAfterTestType, string> = new Map(
+  [
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        bySetPos: 1,
+        byDay: "MO",
+        count: 12
+      },
+      "FREQ=MONTHLY;BYSETPOS=1;BYDAY=MO;INTERVAL=1;COUNT=12"
+    ], // valid input
+    [
+      {
+        freq: "",
+        interval: 2,
+        bySetPos: -1,
+        byDay: "SU",
+        count: 1
+      },
+      "ERROR"
+    ], // empty freq, should be ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: -8,
+        bySetPos: 2,
+        byDay: "WE",
+        count: 3
+      },
+      "ERROR"
+    ], // negative interval, should be ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        bySetPos: -9,
+        byDay: "MO",
+        count: 10
+      },
+      "ERROR"
+    ], // set pos value not contained within setPosDropdownDict, should be ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 4,
+        bySetPos: 3,
+        byDay: "",
+        count: 1
+      },
+      "ERROR"
+    ], // empty byDay value, should be ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        bySetPos: 1,
+        byDay: "FR",
+        count: -1
+      },
+      "ERROR"
+    ] // negative count, should be ERROR
+  ]
+);
+
+const monthlyDateUntilTestData: Map<MonthlyDateUntilTestType, string> = new Map(
+  [
+    [
+      {
+        freq: "MONTHLY",
+        interval: 3,
+        bySetPos: 1,
+        byDay: "FR",
+        until: new Date(2030, 0, 25)
+      },
+      "FREQ=MONTHLY;BYSETPOS=1;BYDAY=FR;INTERVAL=3;UNTIL=20300125T000000Z"
+    ], // valid input
+    [
+      {
+        freq: "",
+        interval: 1,
+        bySetPos: 2,
+        byDay: "TU",
+        until: new Date(2030, 3, 15)
+      },
+      "ERROR"
+    ], // empty freq, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: -1,
+        bySetPos: -1,
+        byDay: "MO",
+        until: new Date(2030, 7, 28)
+      },
+      "ERROR"
+    ], // negative interval, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 2,
+        bySetPos: 1000,
+        byDay: "TH",
+        until: new Date(2030, 8, 22)
+      },
+      "ERROR"
+    ], // bySetPos not in freqDropdownDict, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 1,
+        bySetPos: 4,
+        byDay: "",
+        until: new Date(2028, 1, 3)
+      },
+      "ERROR"
+    ], // empty byDay, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 5,
+        bySetPos: 2,
+        byDay: "WE",
+        until: new Date(2000, 0, 1)
+      },
+      "ERROR"
+    ] // until date in past, should return ERROR
+  ]
+);
+
 describe("RRule string builder - daily, end after", () => {
   for (const [{ interval, count }, rrule] of dailyAfterTestData) {
     it(`Daily every ${interval} day(s), end after ${count} iteration(s)`, () => {
@@ -222,6 +480,120 @@ describe("RRule string builder - weekly, until", () => {
         freq,
         interval,
         weekly: {
+          byDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          basis: "UNTIL",
+          until
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - monthly, by monthday, end after", () => {
+  for (const [
+    { freq, interval, byMonthDay, count },
+    rrule
+  ] of monthlyCountAfterTestData) {
+    it(`Monthly every ${interval} months, on day ${byMonthDay}, end after ${count} iterations`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        interval,
+        monthly: {
+          ...mockRepeatFormState.monthly,
+          byMonthDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          count
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - monthly, by monthday, until", () => {
+  for (const [
+    { freq, interval, byMonthDay, until },
+    rrule
+  ] of monthlyCountUntilTestData) {
+    it(`Monthly every ${interval} months, on day ${byMonthDay}, until ${until.toLocaleDateString()}`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        interval,
+        monthly: {
+          ...mockRepeatFormState.monthly,
+          byMonthDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          basis: "UNTIL",
+          until
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - monthly, by set pos, end after", () => {
+  for (const [
+    { freq, interval, bySetPos, byDay, count },
+    rrule
+  ] of monthlyDateAfterTestData) {
+    it(`Monthly every ${interval} months, ${bySetPos} ${byDay}, end after ${count} iterations`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        interval,
+        monthly: {
+          ...mockRepeatFormState.monthly,
+          basis: "BYSETPOS",
+          bySetPos,
+          byDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          count
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - monthly, by set pos, until", () => {
+  for (const [
+    { freq, interval, bySetPos, byDay, until },
+    rrule
+  ] of monthlyDateUntilTestData) {
+    it(`Monthly every ${interval} months, ${bySetPos} ${byDay}, until ${until.toLocaleDateString()}`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        interval,
+        monthly: {
+          ...mockRepeatFormState.monthly,
+          basis: "BYSETPOS",
+          bySetPos,
           byDay
         },
         until: {
