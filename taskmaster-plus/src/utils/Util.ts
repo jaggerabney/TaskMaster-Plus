@@ -162,7 +162,7 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
         switch (monthly.basis) {
           case "BYMONTHDAY":
             // if byMonthDay is 0 or negative, return ERROR
-            if (monthly.byMonthDay <= 0) {
+            if (monthly.byMonthDay <= 0 || monthly.byMonthDay > 31) {
               return "ERROR";
             }
 
@@ -172,8 +172,8 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
           case "BYSETPOS":
             // values associated with set positions - [1, 2, 3, 4, -1]
             const validSetPosValues = Array.from(setPosDropdownDict.values());
-            // valid values for byMonth - [SU, MO, TU, WE, TH, FR, SA, SU]
-            const validByMonthValues = daysOfTheWeek.map((day) =>
+            // valid values for byDay - [SU, MO, TU, WE, TH, FR, SA, SU]
+            const validByDayValues = daysOfTheWeek.map((day) =>
               day.slice(0, 2).toUpperCase()
             );
 
@@ -181,13 +181,14 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
             // OR if byDay is not a valid value
             if (
               !validSetPosValues.includes(monthly.bySetPos) ||
-              !validByMonthValues.includes(monthly.byDay)
+              !validByDayValues.includes(monthly.byDay)
             ) {
               return "ERROR";
             }
 
             rrules.push(`BYSETPOS=${monthly.bySetPos}`);
             rrules.push(`BYDAY=${monthly.byDay}`);
+
             break;
         }
 
@@ -195,13 +196,51 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
       case "YEARLY":
         switch (yearly.basis) {
           case "BYMONTH":
+            // index is yearly.byMonth - 1 because yearly.byMonth is 1-indexed
+            const targetMonth = monthsOfTheYear[yearly.byMonth - 1];
+            // how many days in the targetMonth - between 28 and 31
+            const daysInMonth = daysPerMonth.get(targetMonth)!;
+
+            // if byMonth is 0 or negative,
+            // or byMonthDay is 0 or negative,
+            // or byMonthDay is greater than the number of days in the month,
+            // return ERROR
+            if (
+              yearly.byMonth <= 0 ||
+              yearly.byMonthDay <= 0 ||
+              yearly.byMonthDay > daysInMonth
+            ) {
+              return "ERROR";
+            }
+
             rrules.push(`BYMONTH=${yearly.byMonth}`);
             rrules.push(`BYMONTHDAY=${yearly.byMonthDay}`);
+
             break;
           case "BYSETPOS":
+            // values associated with set positions - [1, 2, 3, 4, -1]
+            const validSetPosValues = Array.from(setPosDropdownDict.values());
+            // valid values for byDay - [SU, MO, TU, WE, TH, FR, SA, SU]
+            const validByDayValues = daysOfTheWeek.map((day) =>
+              day.slice(0, 2).toUpperCase()
+            );
+
+            // if bySetPos is not valid,
+            // or byDay is not valid,
+            // or bySetMonth is not beteween 1-12
+            if (
+              !validSetPosValues.includes(yearly.bySetPos) ||
+              !validByDayValues.includes(yearly.byDay) ||
+              yearly.bySetMonth > 12 ||
+              yearly.bySetMonth < 0
+            ) {
+              return "ERROR";
+            }
+
             rrules.push(`BYSETPOS=${yearly.bySetPos}`);
             rrules.push(`BYDAY=${yearly.byDay}`);
             rrules.push(`BYMONTH=${yearly.bySetMonth}`);
+
             break;
         }
 
@@ -209,6 +248,7 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
     }
 
     if (freq !== "YEARLY") {
+      // if interval is 0 or negative, return ERROR
       if (interval <= 0) {
         return "ERROR";
       }
@@ -218,6 +258,7 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
 
     switch (until.basis) {
       case "COUNT":
+        // if count is 0 or negative, return ERROR
         if (until.count <= 0) {
           return "ERROR";
         }
@@ -228,6 +269,7 @@ export function buildRRuleStr(data: RepeatFormStateType): string {
       case "UNTIL":
         const now = new Date();
 
+        // if until date is in the past, return ERROR
         if (until.until.getTime() < now.getTime()) {
           return "ERROR";
         }

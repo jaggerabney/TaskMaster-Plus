@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import {
   buildRRuleStr,
   defaultRepeatFormState,
+  monthsOfTheYear,
   RepeatFormStateType
 } from "@/utils/Util";
 
@@ -61,6 +62,36 @@ interface MonthlyDateUntilTestType {
   interval: number;
   bySetPos: number;
   byDay: string;
+  until: Date;
+}
+
+interface YearlyDateAfterTestType {
+  freq: string;
+  byMonth: number;
+  byMonthDay: number;
+  count: number;
+}
+
+interface YearlyDateUntilTestType {
+  freq: string;
+  byMonth: number;
+  byMonthDay: number;
+  until: Date;
+}
+
+interface YearlySetPosAfterTestType {
+  freq: string;
+  bySetPos: number;
+  byDay: string;
+  byMonth: number;
+  count: number;
+}
+
+interface YearlySetPosUntilTestType {
+  freq: string;
+  bySetPos: number;
+  byDay: string;
+  byMonth: number;
   until: Date;
 }
 
@@ -223,6 +254,15 @@ const monthlyCountAfterTestData: Map<MonthlyCountAfterTestType, string> =
     [
       {
         freq: "MONTHLY",
+        interval: 2,
+        byMonthDay: 100,
+        count: 1
+      },
+      "ERROR"
+    ], // byMonthDay not in month, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
         interval: 1,
         byMonthDay: 1,
         count: -1
@@ -269,6 +309,15 @@ const monthlyCountUntilTestData: Map<MonthlyCountUntilTestType, string> =
       },
       "ERROR"
     ], // negative byMonthDay, should return ERROR
+    [
+      {
+        freq: "MONTHLY",
+        interval: 2,
+        byMonthDay: 100,
+        until: new Date(2030, 1, 1)
+      },
+      "ERROR"
+    ], // byMonthDay not in month, should return ERROR
     [
       {
         freq: "MONTHLY",
@@ -409,6 +458,259 @@ const monthlyDateUntilTestData: Map<MonthlyDateUntilTestType, string> = new Map(
     ] // until date in past, should return ERROR
   ]
 );
+
+const yearlyDateAfterTestData: Map<YearlyDateAfterTestType, string> = new Map([
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 1,
+      byMonthDay: 15,
+      count: 12
+    },
+    "FREQ=YEARLY;BYMONTH=1;BYMONTHDAY=15;COUNT=12"
+  ], // valid input
+  [
+    {
+      freq: "",
+      byMonth: 1,
+      byMonthDay: 1,
+      count: 1
+    },
+    "ERROR"
+  ], // empty freq, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: -1,
+      byMonthDay: 10,
+      count: 2
+    },
+    "ERROR"
+  ], // negative byMonth, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 4,
+      byMonthDay: -3,
+      count: 3
+    },
+    "ERROR"
+  ], // negative byMonthDay, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 1,
+      byMonthDay: 1000,
+      count: 2
+    },
+    "ERROR"
+  ], // byMonthDay not in month, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 3,
+      byMonthDay: 30,
+      count: -2
+    },
+    "ERROR"
+    // negative count, should return ERROR
+  ]
+]);
+
+const yearlyDateUntilTestData: Map<YearlyDateUntilTestType, string> = new Map([
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 2,
+      byMonthDay: 14,
+      until: new Date(2030, 1, 14)
+    },
+    "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=14;UNTIL=20300214T000000Z"
+  ], // valid input
+  [
+    {
+      freq: "",
+      byMonth: 4,
+      byMonthDay: 29,
+      until: new Date(2030, 3, 29)
+    },
+    "ERROR"
+  ], // empty freq, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: -1,
+      byMonthDay: 30,
+      until: new Date(2030, 0, 30)
+    },
+    "ERROR"
+  ], // negative byMonth, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 8,
+      byMonthDay: -2,
+      until: new Date(2030, 7, 2)
+    },
+    "ERROR"
+  ], // negative byMonthDay, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 3,
+      byMonthDay: 100,
+      until: new Date(2030, 2, 1)
+    },
+    "ERROR"
+  ], // byMonthDay doesn't fit in month, should return ERROR
+  [
+    {
+      freq: "YEARLY",
+      byMonth: 12,
+      byMonthDay: 25,
+      until: new Date(1980, 11, 25)
+    },
+    "ERROR"
+  ] // until date in past, should return ERROR
+]);
+
+const yearlySetPosAfterTestData: Map<YearlySetPosAfterTestType, string> =
+  new Map([
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 1,
+        byDay: "MO",
+        byMonth: 1,
+        count: 2
+      },
+      "FREQ=YEARLY;BYSETPOS=1;BYDAY=MO;BYMONTH=1;COUNT=2"
+    ], // valid input
+    [
+      {
+        freq: "",
+        bySetPos: 1,
+        byDay: "MO",
+        byMonth: 1,
+        count: 2
+      },
+      "ERROR"
+    ], // empty freq, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 1000,
+        byDay: "TU",
+        byMonth: 3,
+        count: 1
+      },
+      "ERROR"
+    ], // invalid bySetPos, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 3,
+        byDay: "",
+        byMonth: 11,
+        count: 3
+      },
+      "ERROR"
+    ], // empty byDay, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 1,
+        byDay: "TU",
+        byMonth: -2,
+        count: 1
+      },
+      "ERROR"
+    ], // negative byMonth, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 1,
+        byDay: "TU",
+        byMonth: 15,
+        count: 1
+      },
+      "ERROR"
+    ] // invalid byMonth, should return ERROR
+  ]);
+
+const yearlySetPosUntilTestData: Map<YearlySetPosUntilTestType, string> =
+  new Map([
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 1,
+        byDay: "FR",
+        byMonth: 3,
+        until: new Date(2030, 2, 1)
+      },
+      "FREQ=YEARLY;BYSETPOS=1;BYDAY=FR;BYMONTH=3;UNTIL=20300301T000000Z"
+    ], // valid input
+    [
+      {
+        freq: "",
+        bySetPos: 3,
+        byDay: "MO",
+        byMonth: 7,
+        until: new Date(2030, 2, 1)
+      },
+      "ERROR"
+    ], // empty freq, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 512,
+        byDay: "SA",
+        byMonth: 3,
+        until: new Date(2030, 2, 1)
+      },
+      "ERROR"
+    ], // invalid setPos, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: -1,
+        byDay: "",
+        byMonth: 11,
+        until: new Date(2030, 2, 1)
+      },
+      "ERROR"
+    ], // empty byDay, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 4,
+        byDay: "TU",
+        byMonth: -1,
+        until: new Date(2030, 2, 1)
+      },
+      "ERROR"
+    ], // negative byMonth, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 2,
+        byDay: "WE",
+        byMonth: 24,
+        until: new Date(2030, 2, 1)
+      },
+      "ERROR"
+    ], // invalid byMonth, should return ERROR
+    [
+      {
+        freq: "YEARLY",
+        bySetPos: 3,
+        byDay: "TH",
+        byMonth: 3,
+        until: new Date(1972, 3, 3)
+      },
+      "ERROR"
+    ] // until date in past, should return ERROR
+  ]);
 
 describe("RRule string builder - daily, end after", () => {
   for (const [{ interval, count }, rrule] of dailyAfterTestData) {
@@ -594,6 +896,124 @@ describe("RRule string builder - monthly, by set pos, until", () => {
           ...mockRepeatFormState.monthly,
           basis: "BYSETPOS",
           bySetPos,
+          byDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          basis: "UNTIL",
+          until
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - yearly, on date, end after ", () => {
+  for (const [
+    { freq, byMonth, byMonthDay, count },
+    rrule
+  ] of yearlyDateAfterTestData) {
+    it(`Yearly on ${byMonth}/${byMonthDay}, end after ${count} iterations`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        yearly: {
+          ...mockRepeatFormState.yearly,
+          byMonth,
+          byMonthDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          count
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - yearly, on date, until", () => {
+  for (const [
+    { freq, byMonth, byMonthDay, until },
+    rrule
+  ] of yearlyDateUntilTestData) {
+    it(`Yearly on ${byMonth}/${byMonthDay}, until ${until.toLocaleDateString()}`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        yearly: {
+          ...mockRepeatFormState.yearly,
+          byMonth,
+          byMonthDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          basis: "UNTIL",
+          until
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - yearly, set pos, end after", () => {
+  for (const [
+    { freq, bySetPos, byMonth, byDay, count },
+    rrule
+  ] of yearlySetPosAfterTestData) {
+    it(`Yearly on ${bySetPos} ${byDay} of ${
+      monthsOfTheYear[byMonth - 1]
+    }, end after ${count} iterations`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        yearly: {
+          ...mockRepeatFormState.yearly,
+          basis: "BYSETPOS",
+          bySetPos,
+          bySetMonth: byMonth,
+          byDay
+        },
+        until: {
+          ...mockRepeatFormState.until,
+          count
+        }
+      };
+
+      const rruleStr = buildRRuleStr(repeatFormState);
+
+      expect(rruleStr).toBe(rrule);
+    });
+  }
+});
+
+describe("RRule string builder - yearly, set pos, until", () => {
+  for (const [
+    { freq, bySetPos, byMonth, byDay, until },
+    rrule
+  ] of yearlySetPosUntilTestData) {
+    it(`Yearly on ${bySetPos} ${byDay} of ${
+      monthsOfTheYear[byMonth - 1]
+    }, until ${until.toLocaleDateString()}`, () => {
+      const repeatFormState = {
+        ...mockRepeatFormState,
+        freq,
+        yearly: {
+          ...mockRepeatFormState.yearly,
+          basis: "BYSETPOS",
+          bySetPos,
+          bySetMonth: byMonth,
           byDay
         },
         until: {
