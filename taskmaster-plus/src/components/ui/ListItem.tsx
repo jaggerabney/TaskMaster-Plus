@@ -17,8 +17,8 @@ const ListItem: React.FC<ListItemType> = ({
   visible,
   onClick
 }) => {
-  return (
-    visible && (
+  if (visible) {
+    return (
       <Card key={id}>
         <h2 className="text-2xl font-bold ">{title}</h2>
         {tasks.length > 0 &&
@@ -42,8 +42,8 @@ const ListItem: React.FC<ListItemType> = ({
           </div>
         )}
       </Card>
-    )
-  );
+    );
+  }
 };
 
 export default ListItem;
