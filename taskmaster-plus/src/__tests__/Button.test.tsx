@@ -7,7 +7,6 @@ describe("Button component", () => {
   // included to make things less messy
   const mockButton = (
     <Button
-      id="test-button"
       text="Login"
       textColor="text-white"
       borderColor="border-white"
@@ -24,8 +23,8 @@ describe("Button component", () => {
   });
 
   it("button text is not selectable", () => {
-    render(mockButton);
-    const button = document.getElementById("test-button");
+    const { container } = render(mockButton);
+    const button = container.querySelector("button");
 
     // no act
 
@@ -33,8 +32,8 @@ describe("Button component", () => {
   });
 
   it("increases in scale when hovered over", async () => {
-    render(mockButton);
-    const button = document.getElementById("test-button");
+    const { container } = render(mockButton);
+    const button = container.querySelector("button");
 
     fireEvent.mouseEnter(button as Element);
 

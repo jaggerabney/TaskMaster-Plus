@@ -1,39 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Sidebar component renders correctly 1`] = `
+exports[`NewListModal component renders correctly 1`] = `
 {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
-      <nav
-        class="bg-cosmicLatte w-1/5 p-8 flex flex-col gap-8 justify-between"
-      >
-        <aside
-          class="grow bg-white rounded p-8 flex flex-col gap-2"
-          id="list-view-pane"
-        />
-        <button
-          class="px-4 py-2 w-full text-redNCS border-redNCS undefined whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
-        >
-          New list
-        </button>
-      </nav>
+      <div
+        class="bg-black size-full shadow-2xl fixed z-20 opacity-50"
+        id="background"
+      />
+      <div
+        class="bg-white rounded-xl inset-0 h-fit w-fit p-8 fixed m-auto z-30"
+        id="modal"
+      />
     </div>
   </body>,
   "container": <div>
-    <nav
-      class="bg-cosmicLatte w-1/5 p-8 flex flex-col gap-8 justify-between"
-    >
-      <aside
-        class="grow bg-white rounded p-8 flex flex-col gap-2"
-        id="list-view-pane"
-      />
-      <button
-        class="px-4 py-2 w-full text-redNCS border-redNCS undefined whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
-      >
-        New list
-      </button>
-    </nav>
+    <div
+      class="bg-black size-full shadow-2xl fixed z-20 opacity-50"
+      id="background"
+    />
+    <div
+      class="bg-white rounded-xl inset-0 h-fit w-fit p-8 fixed m-auto z-30"
+      id="modal"
+    />
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],

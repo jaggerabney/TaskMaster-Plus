@@ -13,8 +13,8 @@ describe("Header component", () => {
   });
 
   it("title component is not selectable", () => {
-    render(<Header />);
-    const title = document.getElementById("header-title");
+    const { container } = render(<Header />);
+    const title = container.querySelector("h1");
 
     // no act
 
@@ -22,11 +22,11 @@ describe("Header component", () => {
   });
 
   it("button does nothing (for now!)", () => {
-    render(<Header />);
-    const loginButton = document.getElementById("header-login-button");
+    const { container } = render(<Header />);
+    const loginButton = container.querySelector("button");
 
     // no act (for now)
 
-    expect(loginButton).toBeEnabled(); // will be changed when auth logic is added
+    expect(loginButton).toBeInTheDocument(); // will be changed when auth logic is added
   });
 });

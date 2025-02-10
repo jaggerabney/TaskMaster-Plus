@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={onNewTask}
         />
       )}
-      <div
+      <aside
         id="list-view-pane"
         className="grow bg-white rounded p-8 flex flex-col gap-2"
       >
@@ -64,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
         ))}
-      </div>
+      </aside>
       <Button
         text="New list"
         textColor="text-redNCS"

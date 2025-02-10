@@ -7,7 +7,6 @@ exports[`Button component renders correctly 1`] = `
     <div>
       <button
         class="px-4 py-2 w-full text-white border-white undefined whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
-        id="test-button"
       >
         Login
       </button>
@@ -16,7 +15,6 @@ exports[`Button component renders correctly 1`] = `
   "container": <div>
     <button
       class="px-4 py-2 w-full text-white border-white undefined whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
-      id="test-button"
     >
       Login
     </button>
