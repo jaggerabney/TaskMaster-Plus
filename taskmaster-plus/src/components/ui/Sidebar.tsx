@@ -41,12 +41,18 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={onNewTask}
         />
       )}
-      <div className="grow bg-white rounded p-8 flex flex-col gap-2">
+      <div
+        id="list-view-pane"
+        className="grow bg-white rounded p-8 flex flex-col gap-2"
+      >
         {listContext.state.lists.map((list) => (
-          <div key={list.id} className="flex flex-row gap-4">
+          <div
+            key={list.id}
+            id={list.id.toString()}
+            className="flex flex-row gap-4"
+          >
             <input
               type="checkbox"
-              id={list.id.toString()}
               name={list.title}
               checked={list.visible}
               onChange={() => {
