@@ -1,6 +1,7 @@
 "use client";
 
 export interface ButtonProps {
+  id?: string;
   text: string;
   textColor: string;
   borderColor: string;
@@ -10,6 +11,7 @@ export interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({
+  id,
   text,
   textColor,
   borderColor,
@@ -19,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
+      id={id}
       type={type}
       className={`px-4 py-2 w-full ${textColor} ${borderColor} ${bgColor} whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100`}
       onClick={onClick}
