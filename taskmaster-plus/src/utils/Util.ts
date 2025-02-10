@@ -3,8 +3,6 @@ export function toUntilDateString(date: Date): string {
 
   const dateISOString = date.toISOString();
 
-  // TODO: fix issue where ISO milliseconds(?) causing test failures
-
   return dateISOString // ...to ISO string - e.g., 2023-12-24T18:30:00Z...
     .replace(/\..../g, "") // remove ms portion
     .replace(/[-:]/g, ""); // ...without the dashes, colons, or periods

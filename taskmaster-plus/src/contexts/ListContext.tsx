@@ -51,7 +51,7 @@ export const listReducer = (
   action: ListAction
 ): ListState => {
   switch (action.type) {
-    case "CREATE":
+    case ListActions.CREATE:
       return {
         lists: [
           ...state.lists,
@@ -63,7 +63,7 @@ export const listReducer = (
           }
         ]
       };
-    case "UPDATE":
+    case ListActions.UPDATE:
       const updatedList = state.lists;
       const targetListIndex = state.lists.findIndex(
         (list) => list.id === action.payload.id

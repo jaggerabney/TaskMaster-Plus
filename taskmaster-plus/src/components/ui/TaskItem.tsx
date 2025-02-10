@@ -17,8 +17,6 @@ const TaskItem: React.FC<Task> = ({
     setIsChecked((prevState) => !prevState);
   }
 
-  // TODO: style due date/description and add reoccurrance using RRule!
-
   return (
     <div className="flex flex-col gap-2">
       <div
