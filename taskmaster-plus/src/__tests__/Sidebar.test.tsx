@@ -1,14 +1,8 @@
-// Should render correctly
-// Should show *New task* button when a list is made
-// Should show lists in the list view when one is made
-// Should be able to toggle list visibility
-
 import "@testing-library/jest-dom";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import Sidebar from "@/components/ui/Sidebar";
 import { ListContext, ListContextType } from "@/contexts/ListContext";
-import React from "react";
 
 const customRender = (
   ui: React.JSX.Element,
@@ -44,8 +38,8 @@ describe("Sidebar component", () => {
   });
 
   it("shows the New Task button when there's at least one list", () => {
-    const { container } = customRender(mockSidebar, providerProps);
-    const newTaskButton = container.querySelector("button");
+    customRender(mockSidebar, providerProps);
+    const newTaskButton = screen.getByText(/new task/i);
 
     // no act
 
@@ -55,7 +49,7 @@ describe("Sidebar component", () => {
   it("shows lists in the list view pane when they're made", () => {
     const { container } = customRender(mockSidebar, providerProps);
     const listViewPane = container.querySelector("aside");
-    const listItem = listViewPane?.querySelector("div") as HTMLElement;
+    const listItem = screen.getByText(providerProps.state.lists[0].title);
 
     // no act
 

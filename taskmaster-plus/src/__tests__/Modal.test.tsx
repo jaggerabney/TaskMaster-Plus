@@ -11,12 +11,12 @@ describe("NewListModal component", () => {
     expect(modal).toMatchSnapshot();
   });
 
-  it("closes when the background is clicked", () => {
+  it("calls onClose when background is clicked", () => {
     const mockOnClose = jest.fn();
-    render(<Modal onClose={mockOnClose} />);
-    const background = document.getElementById("background");
+    const { container } = render(<Modal onClose={mockOnClose} />);
+    const background = container.querySelector("div") as HTMLDivElement;
 
-    fireEvent.click(background as Element);
+    fireEvent.click(background);
 
     expect(mockOnClose).toHaveBeenCalled();
   });
