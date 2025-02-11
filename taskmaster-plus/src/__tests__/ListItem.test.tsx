@@ -47,4 +47,25 @@ describe("List item component", () => {
 
     expect(createNewTaskLink).not.toBeNull();
   });
+
+  it('doesn\'t display the "Create new task" link when there are tasks', () => {
+    const listItemWithTasksProps = {
+      ...mockListItemProps,
+      tasks: [
+        {
+          id: 2,
+          listId: 1,
+          title: "Test task",
+          completed: false,
+          dueDate: new Date(2030, 0, 1),
+          description: "Test description"
+        }
+      ]
+    };
+
+    render(<ListItem {...listItemWithTasksProps} />);
+    const createNewTaskLink = screen.queryByText(/create new task/i);
+
+    expect(createNewTaskLink).toBeNull();
+  });
 });

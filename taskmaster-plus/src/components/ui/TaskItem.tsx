@@ -5,7 +5,7 @@ import { Task } from "@/contexts/ListContext";
 
 const TaskItem: React.FC<Task> = ({
   id,
-  listId,
+  // listId,
   title,
   completed,
   dueDate,
@@ -41,7 +41,7 @@ const TaskItem: React.FC<Task> = ({
         </div>
       </div>
       {!isChecked && (
-        <>
+        <div id="details-wrapper">
           {dueDate && (
             <div className="text-xs ml-10 flex flex-row gap-2 items-center">
               <FaCalendar />
@@ -63,7 +63,7 @@ const TaskItem: React.FC<Task> = ({
               {description}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

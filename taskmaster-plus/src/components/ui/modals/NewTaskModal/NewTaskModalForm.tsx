@@ -36,7 +36,7 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
 
     const eventTarget = event.target as typeof event.target & {
       title: { value: string };
-      date: { value: Date };
+      date: { value: string };
       time: { value: string };
       description: { value: string };
     };
@@ -69,7 +69,18 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
     }
 
     if (eventTarget.date.value) {
-      taskDueDate = new Date(eventTarget.date.value);
+      // console.log(typeof eventTarget.date.value);
+      // console.log(eventTarget.date.value);
+
+      const dateValues = eventTarget.date.value.split("-");
+      const year = Number(dateValues[0]);
+      const month = Number(dateValues[1]) - 1; // months are 0-indexed in JavaScript :(
+      const day = Number(dateValues[2]);
+
+      const utcDueDate = new Date(year, month, day);
+      taskDueDate = new Date(
+        utcDueDate.getTime() + utcDueDate.getTimezoneOffset() * 60000
+      );
     }
 
     if (eventTarget.time.value) {
@@ -164,7 +175,6 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         className="border border-black rounded p-4 resize-none"
       />
       <NewTaskRepeatForm data={repeatFormState} onChange={setRepeatFormState} />
-
       <ul className="flex flex-row justify-center text-redNCS">
         {errors.map((error) => (
           <li key={error}>{error}</li>
