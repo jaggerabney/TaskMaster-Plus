@@ -55,7 +55,7 @@ const MonthlyOptions: React.FC<MonthlyOptionsPropsType> = ({
   }
 
   return (
-    <ul className="flex flex-col text-xl gap-4">
+    <ul id="monthly-options" className="flex flex-col text-xl gap-4">
       <li className="flex flex-row items-center gap-4 ml-8">
         <input
           id="by-monthday-checkbox"

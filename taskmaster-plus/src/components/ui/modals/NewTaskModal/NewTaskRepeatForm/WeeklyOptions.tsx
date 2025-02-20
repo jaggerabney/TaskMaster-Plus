@@ -15,7 +15,10 @@ const WeeklyOptions: React.FC<WeeklyOptionsPropsType> = ({
   const weekdays = daysOfTheWeek.map((day) => day.slice(0, 3));
 
   return (
-    <ul className="flex flex-row justify-between gap-2 ml-8 mr-8">
+    <ul
+      id="weekly-options"
+      className="flex flex-row justify-between gap-2 ml-8 mr-8"
+    >
       {weekdays.map((day) => (
         <Button
           key={day}

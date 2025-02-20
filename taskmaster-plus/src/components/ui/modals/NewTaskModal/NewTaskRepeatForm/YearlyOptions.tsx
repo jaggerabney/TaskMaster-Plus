@@ -64,7 +64,7 @@ const YearlyOptions: React.FC<YearlyOptionsPropsType> = ({
   }
 
   return (
-    <ul className="flex flex-col text-xl gap-4">
+    <ul id="yearly-options" className="flex flex-col text-xl gap-4">
       <li className="flex flex-row items-center gap-4 ml-8">
         <input
           id="by-month-checkbox"
@@ -90,9 +90,9 @@ const YearlyOptions: React.FC<YearlyOptionsPropsType> = ({
           type="number"
           step={1}
           min={1}
+          max={daysPerMonth.get(monthsOfTheYear[byMonth - 1])}
           value={byMonthDay}
           onChange={inputChangeHandler}
-          max={daysPerMonth.get(monthsOfTheYear[byMonthDay - 1])}
           className="border border-black rounded p-2 w-16"
         />
       </li>
