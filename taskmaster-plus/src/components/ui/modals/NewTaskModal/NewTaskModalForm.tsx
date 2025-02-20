@@ -16,7 +16,7 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
   onSubmit,
   onCancel
 }) => {
-  const [errors, setErrors] = useState<string[]>([]);
+  const [error, setError] = useState<string>("");
   const [repeatFormState, setRepeatFormState] = useState(
     defaultRepeatFormState
   );
@@ -24,17 +24,23 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
   const listDropdownRef = useRef<HTMLOptionElement>(null);
 
   function formIsValid() {
-    return errors.length === 0;
+    return error.length === 0;
   }
 
   function formChangeHandler() {
-    setErrors([]);
+    setError("");
   }
 
-  function formSubmitHandler(event: React.FormEvent) {
+  function formSubmitHandler(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const eventTarget = event.target as typeof event.target & {
+    // the below line used to be:
+    // const payload = event.target as typeof event.target & {
+    // ...but was changed because extracting the values this way led to null values being
+    // returned in the unit test that ensures you can't set a due date in the past.
+    // isn't programming lovely?
+    const payload = event.currentTarget
+      .elements as typeof event.currentTarget.elements & {
       title: { value: string };
       date: { value: string };
       time: { value: string };
@@ -43,65 +49,57 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
 
     const taskId = Math.random();
     const listId = Number(listDropdownRef.current?.id);
-    const taskTitle = eventTarget.title.value;
+    const taskTitle = payload.title.value;
     let taskDueDate = undefined;
     let taskDescription = undefined;
 
     // If listId doesn't match any IDs in ListContext
     if (!listContext.state.lists.map((list) => list.id).includes(listId)) {
-      return setErrors((prevErrors) => [...prevErrors, "Error: invalid list."]);
+      return setError("Error: invalid list.");
     }
 
     // If title is empty
-    if (taskTitle.trim().length === 0) {
-      return setErrors((prevErrors) => [
-        ...prevErrors,
-        "Error: title is required."
-      ]);
+    if (!taskTitle) {
+      return setError("Error: title is required.");
     }
 
     // If time is set and date is not
-    if (eventTarget.time.value && !eventTarget.date.value) {
-      return setErrors((prevErrors) => [
-        ...prevErrors,
-        "Error: time cannot be set without date."
-      ]);
+    if (payload.time.value && !payload.date.value) {
+      return setError("Error: time cannot be set without date.");
     }
 
-    if (eventTarget.date.value) {
-      // console.log(typeof eventTarget.date.value);
-      // console.log(eventTarget.date.value);
-
-      const dateValues = eventTarget.date.value.split("-");
+    if (payload.date.value) {
+      const dateValues = payload.date.value.split("-");
       const year = Number(dateValues[0]);
       const month = Number(dateValues[1]) - 1; // months are 0-indexed in JavaScript :(
       const day = Number(dateValues[2]);
-
       const utcDueDate = new Date(year, month, day);
+
+      if (utcDueDate.getTime() < Date.now()) {
+        return setError("Error: due date cannot be in the past.");
+      }
+
       taskDueDate = new Date(
         utcDueDate.getTime() + utcDueDate.getTimezoneOffset() * 60000
       );
     }
 
-    if (eventTarget.time.value) {
-      // eventTarget.time.value format: HH:MM
+    if (payload.time.value) {
+      // eventTarget.time.value format: HH:MM <- military time!
       // e.g., 20:20 for 8:20pm
-
-      const hoursAndMinutes = eventTarget.time.value.split(":");
+      const hoursAndMinutes = payload.time.value.split(":");
       const hours = Number(hoursAndMinutes[0]);
       const minutes = Number(hoursAndMinutes[1]);
 
       taskDueDate?.setHours(hours, minutes);
     }
 
-    if (eventTarget.description.value) {
-      taskDescription = eventTarget.description.value;
+    if (payload.description.value) {
+      taskDescription = payload.description.value;
     }
 
     if (formIsValid()) {
       const rruleStr: string = buildRRuleStr(repeatFormState);
-
-      console.log(rruleStr);
 
       onSubmit({
         id: taskId,
@@ -117,6 +115,7 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
 
   return (
     <form
+      id="new-task-modal-form"
       onSubmit={formSubmitHandler}
       onChange={formChangeHandler}
       className="flex flex-col gap-4"
@@ -175,11 +174,9 @@ const NewTaskModalForm: React.FC<NewTaskModalFormType> = ({
         className="border border-black rounded p-4 resize-none"
       />
       <NewTaskRepeatForm data={repeatFormState} onChange={setRepeatFormState} />
-      <ul className="flex flex-row justify-center text-redNCS">
-        {errors.map((error) => (
-          <li key={error}>{error}</li>
-        ))}
-      </ul>
+      <div className="flex flex-row justify-center text-redNCS">
+        {error.length > 0 && error}
+      </div>
       <div id="button-wrapper" className="w-[80%] ml-[20%] flex flex-row gap-4">
         <Button
           text="Cancel"

@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`New task modal form component renders correctly 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <form
+        class="flex flex-col gap-4"
+        id="new-task-modal-form"
+      >
+        <div
+          class="flex flex-row gap-4 items-center"
+          id="list-dropdown-wrapper"
+        >
+          <label
+            class="text-xl"
+            for="list"
+          >
+            List:
+          </label>
+          <select
+            class="border border-black rounded text-xl p-2"
+            id="list"
+            name="list"
+          />
+        </div>
+        <input
+          class="p-4 border border-black rounded text-xl"
+          id="title"
+          placeholder="Task title"
+          type="text"
+        />
+        <div
+          class="text-xl flex flex-row gap-4 items-center"
+          id="datetime-wrapper"
+        >
+          Due:
+          <input
+            class="border border-black rounded p-2"
+            id="date"
+            type="date"
+          />
+          <input
+            class="border border-black rounded p-2"
+            id="time"
+            type="time"
+          />
+        </div>
+        <textarea
+          class="border border-black rounded p-4 resize-none"
+          id="description"
+          name="description"
+          placeholder="Task description"
+          rows="3"
+        />
+        <div
+          class="text-xl flex flex-row gap-4 items-center"
+          id="repeat-checkbox-wrapper"
+        >
+          <input
+            id="repeat-checkbox"
+            type="checkbox"
+          />
+          <label
+            for="repeat-checkbox"
+          >
+            Repeat
+          </label>
+        </div>
+        <div
+          class="flex flex-row justify-center text-redNCS"
+        />
+        <div
+          class="w-[80%] ml-[20%] flex flex-row gap-4"
+          id="button-wrapper"
+        >
+          <button
+            class="px-4 py-2 w-full text-redNCS border-redNCS bg-white whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
+          >
+            Cancel
+          </button>
+          <button
+            class="px-4 py-2 w-full text-white border-redNCS bg-redNCS whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
+            type="submit"
+          >
+            Create new task
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>,
+  "container": <div>
+    <form
+      class="flex flex-col gap-4"
+      id="new-task-modal-form"
+    >
+      <div
+        class="flex flex-row gap-4 items-center"
+        id="list-dropdown-wrapper"
+      >
+        <label
+          class="text-xl"
+          for="list"
+        >
+          List:
+        </label>
+        <select
+          class="border border-black rounded text-xl p-2"
+          id="list"
+          name="list"
+        />
+      </div>
+      <input
+        class="p-4 border border-black rounded text-xl"
+        id="title"
+        placeholder="Task title"
+        type="text"
+      />
+      <div
+        class="text-xl flex flex-row gap-4 items-center"
+        id="datetime-wrapper"
+      >
+        Due:
+        <input
+          class="border border-black rounded p-2"
+          id="date"
+          type="date"
+        />
+        <input
+          class="border border-black rounded p-2"
+          id="time"
+          type="time"
+        />
+      </div>
+      <textarea
+        class="border border-black rounded p-4 resize-none"
+        id="description"
+        name="description"
+        placeholder="Task description"
+        rows="3"
+      />
+      <div
+        class="text-xl flex flex-row gap-4 items-center"
+        id="repeat-checkbox-wrapper"
+      >
+        <input
+          id="repeat-checkbox"
+          type="checkbox"
+        />
+        <label
+          for="repeat-checkbox"
+        >
+          Repeat
+        </label>
+      </div>
+      <div
+        class="flex flex-row justify-center text-redNCS"
+      />
+      <div
+        class="w-[80%] ml-[20%] flex flex-row gap-4"
+        id="button-wrapper"
+      >
+        <button
+          class="px-4 py-2 w-full text-redNCS border-redNCS bg-white whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-4 py-2 w-full text-white border-redNCS bg-redNCS whitespace-nowrap select-none font-bold border-2 rounded hover:scale-[1.03] duration-100"
+          type="submit"
+        >
+          Create new task
+        </button>
+      </div>
+    </form>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

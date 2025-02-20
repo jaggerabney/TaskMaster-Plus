@@ -48,7 +48,7 @@ describe("List item component", () => {
     expect(createNewTaskLink).not.toBeNull();
   });
 
-  it('doesn\'t display the "Create new task" link when there are tasks', () => {
+  it('hides the "Create new task" link when there are tasks', () => {
     const listItemWithTasksProps = {
       ...mockListItemProps,
       tasks: [
