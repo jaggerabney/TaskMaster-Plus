@@ -1,0 +1,556 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Yearly options component should render correctly 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <ul
+        class="flex flex-col text-xl gap-4"
+        id="yearly-options"
+      >
+        <li
+          class="flex flex-row items-center gap-4 ml-8"
+        >
+          <input
+            checked=""
+            id="by-month-checkbox"
+            type="checkbox"
+          />
+          <label
+            for="by-month-checkbox"
+          >
+            On
+          </label>
+          <select
+            class="border border-black rounded p-2"
+            id="by-month-dropdown"
+          >
+            <option
+              value="January"
+            >
+              January
+            </option>
+            <option
+              value="February"
+            >
+              February
+            </option>
+            <option
+              value="March"
+            >
+              March
+            </option>
+            <option
+              value="April"
+            >
+              April
+            </option>
+            <option
+              value="May"
+            >
+              May
+            </option>
+            <option
+              value="June"
+            >
+              June
+            </option>
+            <option
+              value="July"
+            >
+              July
+            </option>
+            <option
+              value="August"
+            >
+              August
+            </option>
+            <option
+              value="September"
+            >
+              September
+            </option>
+            <option
+              value="October"
+            >
+              October
+            </option>
+            <option
+              value="November"
+            >
+              November
+            </option>
+            <option
+              value="December"
+            >
+              December
+            </option>
+          </select>
+          <input
+            class="border border-black rounded p-2 w-16"
+            id="by-monthday-input"
+            max="31"
+            min="1"
+            step="1"
+            type="number"
+            value="1"
+          />
+        </li>
+        <li
+          class="flex flex-row items-center gap-4 ml-8"
+        >
+          <input
+            id="by-setpos-checkbox"
+            type="checkbox"
+          />
+          <label
+            for="by-setpos-checkbox"
+          >
+            On the
+          </label>
+          <select
+            class="border border-black rounded p-2"
+            id="by-setpos-dropdown"
+          >
+            <option
+              value="1"
+            >
+              1st
+            </option>
+            <option
+              value="2"
+            >
+              2nd
+            </option>
+            <option
+              value="3"
+            >
+              3rd
+            </option>
+            <option
+              value="4"
+            >
+              4th
+            </option>
+            <option
+              value="-1"
+            >
+              Last
+            </option>
+          </select>
+          <select
+            class="border border-black rounded p-2"
+            id="by-day-dropdown"
+          >
+            <option
+              value="Sunday"
+            >
+              Sunday
+            </option>
+            <option
+              value="Monday"
+            >
+              Monday
+            </option>
+            <option
+              value="Tuesday"
+            >
+              Tuesday
+            </option>
+            <option
+              value="Wednesday"
+            >
+              Wednesday
+            </option>
+            <option
+              value="Thursday"
+            >
+              Thursday
+            </option>
+            <option
+              value="Friday"
+            >
+              Friday
+            </option>
+            <option
+              value="Saturday"
+            >
+              Saturday
+            </option>
+          </select>
+          <label
+            for="by-set-month-dropdown"
+          >
+            of
+          </label>
+          <select
+            class="border border-black rounded p-2"
+            id="by-set-month-dropdown"
+          >
+            <option
+              value="January"
+            >
+              January
+            </option>
+            <option
+              value="February"
+            >
+              February
+            </option>
+            <option
+              value="March"
+            >
+              March
+            </option>
+            <option
+              value="April"
+            >
+              April
+            </option>
+            <option
+              value="May"
+            >
+              May
+            </option>
+            <option
+              value="June"
+            >
+              June
+            </option>
+            <option
+              value="July"
+            >
+              July
+            </option>
+            <option
+              value="August"
+            >
+              August
+            </option>
+            <option
+              value="September"
+            >
+              September
+            </option>
+            <option
+              value="October"
+            >
+              October
+            </option>
+            <option
+              value="November"
+            >
+              November
+            </option>
+            <option
+              value="December"
+            >
+              December
+            </option>
+          </select>
+        </li>
+      </ul>
+    </div>
+  </body>,
+  "container": <div>
+    <ul
+      class="flex flex-col text-xl gap-4"
+      id="yearly-options"
+    >
+      <li
+        class="flex flex-row items-center gap-4 ml-8"
+      >
+        <input
+          checked=""
+          id="by-month-checkbox"
+          type="checkbox"
+        />
+        <label
+          for="by-month-checkbox"
+        >
+          On
+        </label>
+        <select
+          class="border border-black rounded p-2"
+          id="by-month-dropdown"
+        >
+          <option
+            value="January"
+          >
+            January
+          </option>
+          <option
+            value="February"
+          >
+            February
+          </option>
+          <option
+            value="March"
+          >
+            March
+          </option>
+          <option
+            value="April"
+          >
+            April
+          </option>
+          <option
+            value="May"
+          >
+            May
+          </option>
+          <option
+            value="June"
+          >
+            June
+          </option>
+          <option
+            value="July"
+          >
+            July
+          </option>
+          <option
+            value="August"
+          >
+            August
+          </option>
+          <option
+            value="September"
+          >
+            September
+          </option>
+          <option
+            value="October"
+          >
+            October
+          </option>
+          <option
+            value="November"
+          >
+            November
+          </option>
+          <option
+            value="December"
+          >
+            December
+          </option>
+        </select>
+        <input
+          class="border border-black rounded p-2 w-16"
+          id="by-monthday-input"
+          max="31"
+          min="1"
+          step="1"
+          type="number"
+          value="1"
+        />
+      </li>
+      <li
+        class="flex flex-row items-center gap-4 ml-8"
+      >
+        <input
+          id="by-setpos-checkbox"
+          type="checkbox"
+        />
+        <label
+          for="by-setpos-checkbox"
+        >
+          On the
+        </label>
+        <select
+          class="border border-black rounded p-2"
+          id="by-setpos-dropdown"
+        >
+          <option
+            value="1"
+          >
+            1st
+          </option>
+          <option
+            value="2"
+          >
+            2nd
+          </option>
+          <option
+            value="3"
+          >
+            3rd
+          </option>
+          <option
+            value="4"
+          >
+            4th
+          </option>
+          <option
+            value="-1"
+          >
+            Last
+          </option>
+        </select>
+        <select
+          class="border border-black rounded p-2"
+          id="by-day-dropdown"
+        >
+          <option
+            value="Sunday"
+          >
+            Sunday
+          </option>
+          <option
+            value="Monday"
+          >
+            Monday
+          </option>
+          <option
+            value="Tuesday"
+          >
+            Tuesday
+          </option>
+          <option
+            value="Wednesday"
+          >
+            Wednesday
+          </option>
+          <option
+            value="Thursday"
+          >
+            Thursday
+          </option>
+          <option
+            value="Friday"
+          >
+            Friday
+          </option>
+          <option
+            value="Saturday"
+          >
+            Saturday
+          </option>
+        </select>
+        <label
+          for="by-set-month-dropdown"
+        >
+          of
+        </label>
+        <select
+          class="border border-black rounded p-2"
+          id="by-set-month-dropdown"
+        >
+          <option
+            value="January"
+          >
+            January
+          </option>
+          <option
+            value="February"
+          >
+            February
+          </option>
+          <option
+            value="March"
+          >
+            March
+          </option>
+          <option
+            value="April"
+          >
+            April
+          </option>
+          <option
+            value="May"
+          >
+            May
+          </option>
+          <option
+            value="June"
+          >
+            June
+          </option>
+          <option
+            value="July"
+          >
+            July
+          </option>
+          <option
+            value="August"
+          >
+            August
+          </option>
+          <option
+            value="September"
+          >
+            September
+          </option>
+          <option
+            value="October"
+          >
+            October
+          </option>
+          <option
+            value="November"
+          >
+            November
+          </option>
+          <option
+            value="December"
+          >
+            December
+          </option>
+        </select>
+      </li>
+    </ul>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
