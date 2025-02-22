@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
+import { RRule } from "rrule";
 
 import TaskItem from "@/components/ui/TaskItem";
 
@@ -60,6 +61,20 @@ describe("Task item component", () => {
     );
 
     expect(descriptionElement).not.toBeNull();
+  });
+
+  it("displays task reoccurrence", () => {
+    const rruleStr = "FREQ=DAILY;INTERVAL=1;COUNT=30";
+    const rrule: RRule = RRule.fromString(rruleStr);
+    const taskItemWithReoccurrenceProps = {
+      ...mockTaskItemProps,
+      rrule: rruleStr
+    };
+
+    render(<TaskItem {...taskItemWithReoccurrenceProps} />);
+    const reoccurrenceElement = screen.queryByText(rrule.toText());
+
+    expect(reoccurrenceElement).not.toBeNull();
   });
 
   it("displays title with strikethrough text when complete", () => {

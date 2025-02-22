@@ -31,6 +31,7 @@ const ListItem: React.FC<ListItemType> = ({
               completed={task.completed}
               dueDate={task.dueDate}
               description={task.description}
+              rrule={task.rrule}
             />
           ))}
         {tasks.length == 0 && (

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { FaCalendar, FaClock, FaCommentDots } from "react-icons/fa";
+import { FaCalendar, FaClock, FaCommentDots, FaRedo } from "react-icons/fa";
+import { RRule } from "rrule";
 
 import { Task } from "@/contexts/ListContext";
 
@@ -9,7 +10,8 @@ const TaskItem: React.FC<Task> = ({
   title,
   completed,
   dueDate,
-  description
+  description,
+  rrule
 }) => {
   const [isChecked, setIsChecked] = useState(completed);
 
@@ -61,6 +63,12 @@ const TaskItem: React.FC<Task> = ({
             <div className="text-xs ml-10 flex flex-row gap-2 items-center">
               <FaCommentDots />
               {description}
+            </div>
+          )}
+          {rrule && (
+            <div className="text-xs ml-10 flex flex-row gap-2 items-center">
+              <FaRedo />
+              {RRule.fromString(rrule).toText()}
             </div>
           )}
         </div>
