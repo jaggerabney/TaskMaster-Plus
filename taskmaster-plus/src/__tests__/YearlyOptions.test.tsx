@@ -12,14 +12,14 @@ import {
 } from "@/utils/Util";
 
 describe("Yearly options component", () => {
-  const mockOnSubmit = jest.fn();
+  const mockOnChange = jest.fn();
   const mockYearlyOptions = (
     <YearlyOptions
       data={defaultRepeatFormState.yearly}
-      onChange={mockOnSubmit}
+      onChange={mockOnChange}
     />
   );
-  let mockOnSubmitCalls = 0;
+  let mockOnChangeCalls = 0;
 
   it("should render correctly", () => {
     const yearlyOptions = render(mockYearlyOptions);
@@ -40,11 +40,11 @@ describe("Yearly options component", () => {
     let onChangeData: YearlyOptionsType;
 
     await userEvent.click(bySetPosCheckbox);
-    onChangeData = mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+    onChangeData = mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.basis).toEqual("BYSETPOS");
 
     await userEvent.click(byMonthCheckbox);
-    onChangeData = mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+    onChangeData = mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.basis).toEqual("BYMONTH");
   });
 
@@ -69,7 +69,7 @@ describe("Yearly options component", () => {
     await userEvent.selectOptions(byMonthDropdown, augustOption);
 
     const onChangeData: YearlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.byMonth).toEqual(8);
   });
 
@@ -109,7 +109,7 @@ describe("Yearly options component", () => {
     fireEvent.change(byMonthDayInput, { target: { value: 12 } });
 
     const onChangeData: YearlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.byMonthDay).toBe(12);
   });
 
@@ -136,7 +136,7 @@ describe("Yearly options component", () => {
     );
 
     const onChangeData: YearlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.bySetPos).toEqual(2);
   });
 
@@ -180,7 +180,7 @@ describe("Yearly options component", () => {
     );
 
     const onChangeData: YearlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.byDay).toEqual("TU");
   });
 
@@ -221,7 +221,7 @@ describe("Yearly options component", () => {
     await userEvent.selectOptions(bySetMonthDropdown, aprilOption);
 
     const onChangeData: YearlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.bySetMonth).toEqual(4);
   });
 

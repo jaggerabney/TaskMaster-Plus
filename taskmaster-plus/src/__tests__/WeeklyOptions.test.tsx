@@ -5,9 +5,9 @@ import userEvent from "@testing-library/user-event";
 import WeeklyOptions from "@/components/ui/modals/NewTaskModal/NewTaskRepeatForm/WeeklyOptions";
 
 describe("Weekly options component", () => {
-  const mockOnSubmit = jest.fn();
+  const mockOnChange = jest.fn();
   const mockWeeklyOptions = (
-    <WeeklyOptions data={{ byDay: [] }} onChange={mockOnSubmit} />
+    <WeeklyOptions data={{ byDay: [] }} onChange={mockOnChange} />
   );
 
   it("should render correctly", () => {
@@ -21,7 +21,7 @@ describe("Weekly options component", () => {
     const thuButton = screen.getByText("Thu");
     await userEvent.click(thuButton);
 
-    const onChangeData: string = mockOnSubmit.mock.calls[0][0];
+    const onChangeData: string = mockOnChange.mock.calls[0][0];
     expect(onChangeData).toEqual("Thu");
   });
 

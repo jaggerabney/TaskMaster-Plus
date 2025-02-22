@@ -11,14 +11,14 @@ import {
 } from "@/utils/Util";
 
 describe("Monthly options component", () => {
-  const mockOnSubmit = jest.fn();
+  const mockOnChange = jest.fn();
   const mockMonthlyOptions = (
     <MonthlyOptions
       data={defaultRepeatFormState.monthly}
-      onChange={mockOnSubmit}
+      onChange={mockOnChange}
     />
   );
-  let mockOnSubmitCalls = 0;
+  let mockOnChangeCalls = 0;
 
   it("should render correctly", () => {
     const monthlyOptions = render(mockMonthlyOptions);
@@ -39,11 +39,11 @@ describe("Monthly options component", () => {
     let onChangeData: MonthlyOptionsType;
 
     await userEvent.click(bySetPosCheckbox);
-    onChangeData = mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+    onChangeData = mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.basis).toEqual("BYSETPOS");
 
     await userEvent.click(byMonthDayCheckbox);
-    onChangeData = mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+    onChangeData = mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.basis).toEqual("BYMONTHDAY");
   });
 
@@ -67,7 +67,7 @@ describe("Monthly options component", () => {
     fireEvent.change(byMonthDayInput, { target: { value: 3 } });
 
     const onChangeData: MonthlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.byMonthDay).toBe(3);
   });
 
@@ -94,7 +94,7 @@ describe("Monthly options component", () => {
     );
 
     const onChangeData: MonthlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.bySetPos).toEqual(4);
   });
 
@@ -138,7 +138,7 @@ describe("Monthly options component", () => {
     );
 
     const onChangeData: MonthlyOptionsType =
-      mockOnSubmit.mock.calls[mockOnSubmitCalls++][0];
+      mockOnChange.mock.calls[mockOnChangeCalls++][0];
     expect(onChangeData.byDay).toEqual("FR");
   });
 
